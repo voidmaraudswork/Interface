@@ -24,7 +24,7 @@ components.html("""
             text-decoration: none; color: #00f2ff; transition: 0.3s; padding: 10px; text-align: center;
         }
         .btn:hover { background: rgba(0,242,255,0.1); box-shadow: 0 0 20px #00f2ff; transform: scale(1.02); }
-        .title { font-size: 1.5rem; font-weight: 900; margin-bottom: 5px; }
+        .title { font-size: 0.9rem; font-weight: 900; margin-bottom: 5px; }
         .desc { font-family: 'Rajdhani'; font-size: 0.7rem; color: #ccc; margin-top: 5px; line-height: 1.2; }
         #s { position: fixed; top: 0; left: 0; z-index: -1; }
     </style>
@@ -60,5 +60,4 @@ components.html("""
     </script>
 </body>
 </html>
-""", height=800)
 """, height=800)
