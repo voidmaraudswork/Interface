@@ -6,75 +6,22 @@
 }
 
 body {
-    margin: 0;
-    padding: 0;
-    background-color: var(--bg-color);
-    color: white;
+    margin: 0; background-color: var(--bg-color); color: white;
     font-family: 'Inter', sans-serif;
-    overflow-x: hidden;
 }
 
-#canvas-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: -1;
-}
+#canvas-container { position: fixed; top: 0; left: 0; z-index: -1; }
 
-.content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 100px 20px;
-    text-align: center;
-}
+.content { max-width: 1200px; margin: 0 auto; padding: 100px 20px; text-align: center; }
 
-h1 {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 4rem;
-    letter-spacing: 10px;
-    margin-bottom: 10px;
-    color: var(--accent);
-    text-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
-}
+h1 { font-family: 'Orbitron'; font-size: 4rem; color: var(--accent); }
 
-.project-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    margin-top: 60px;
-}
+.project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
 
 .glass-card {
-    position: relative;
-    background: var(--glass);
-    backdrop-filter: blur(15px);
-    border: 1px solid var(--border);
-    padding: 40px;
-    border-radius: 20px;
-    text-decoration: none;
-    color: white;
-    transition: transform 0.4s ease, border-color 0.4s ease;
-    overflow: hidden;
+    background: var(--glass); backdrop-filter: blur(15px);
+    border: 1px solid var(--border); padding: 40px; border-radius: 20px;
+    text-decoration: none; color: white; transition: 0.4s; display: block;
 }
 
-.glass-card:hover {
-    transform: translateY(-10px);
-    border-color: var(--accent);
-}
-
-.card-glow {
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(0, 242, 255, 0.1) 0%, transparent 70%);
-    opacity: 0;
-    transition: opacity 0.4s;
-}
-
-.glass-card:hover .card-glow {
-    opacity: 1;
-}
-
-h3 { font-family: 'Orbitron'; color: var(--accent); }
+.glass-card:hover { transform: translateY(-10px); border-color: var(--accent); }
