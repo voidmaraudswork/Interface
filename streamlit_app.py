@@ -5,18 +5,15 @@ import time
 # 1. PAGE CONFIG & TOTAL UI STRIPPING
 st.set_page_config(page_title="VOID CORE", layout="wide", initial_sidebar_state="collapsed")
 
-# This CSS kills the Streamlit padding and forces the iframe to be full screen without scrolling
 st.markdown("""
     <style>
     #MainMenu, header, footer, [data-testid="stHeader"], [data-testid="stDecoration"] { visibility: hidden !important; }
     .stApp { background: #020205 !important; overflow: hidden !important; }
     .main .block-container { padding: 0 !important; max-width: 100vw !important; height: 100vh !important; overflow: hidden !important; }
     
-    /* Force the iframe to be full height and remove border */
     iframe { 
         position: fixed;
-        top: 0;
-        left: 0;
+        top: 0; left: 0;
         width: 100vw !important;
         height: 100vh !important;
         border: none !important;
@@ -39,7 +36,7 @@ if not st.session_state.booted:
                 height: 100vh; width: 100vw; font-family: 'Orbitron', sans-serif; 
             }
             .msg { color: #00f2ff; font-size: clamp(0.9rem, 4vw, 1.3rem); letter-spacing: 4px; text-align: center; margin-bottom: 20px; text-transform: uppercase; }
-            .bar-bg { width: 220px; height: 2px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
+            .bar-bg { width: 220px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
             .bar-fill { width: 0%; height: 100%; background: #bc13fe; box-shadow: 0 0 15px #bc13fe; animation: load 3s forwards ease-in-out; }
             @keyframes load { to { width: 100%; } }
             .credit { position: fixed; bottom: 40px; color: #bc13fe; font-size: 0.7rem; letter-spacing: 4px; font-weight: bold; }
@@ -52,7 +49,7 @@ if not st.session_state.booted:
     st.session_state.booted = True
     st.rerun()
 
-# --- PHASE 2: THE MAIN DYNAMIC HUB ---
+# --- PHASE 2: THE MAIN HUB ---
 else:
     components.html("""
     <!DOCTYPE html>
@@ -73,25 +70,44 @@ else:
                 justify-content: center; align-items: center; z-index: 100; text-align: center; 
             }
             .portal-msg { color: #bc13fe; font-size: 0.65rem; letter-spacing: 3px; margin-bottom: 10px; font-weight: 900; }
-            .loader-container { width: 240px; height: 2px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 25px; overflow: hidden; }
+            .loader-container { width: 240px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 25px; overflow: hidden; }
             .loader-fill { width: 0%; height: 100%; background: #00f2ff; box-shadow: 0 0 15px #00f2ff; }
 
             /* PERFECTLY CENTERED HUB */
-            .main-container { display: flex; flex-direction: column; align-items: center; width: 90%; max-width: 450px; margin-top: -40px; }
-            .hub-title { color: #00f2ff; letter-spacing: 12px; font-size: clamp(1.8rem, 7vw, 2.3rem); margin: 0; text-align: center; }
-            .hub-subtitle { color: #bc13fe; font-size: 0.55rem; letter-spacing: 5px; margin-top: 5px; margin-bottom: 25px; opacity: 0.9; }
+            .main-container { display: flex; flex-direction: column; align-items: center; width: 90%; max-width: 450px; margin-top: -30px; }
+            .hub-title { color: #00f2ff; letter-spacing: 12px; font-size: clamp(1.8rem, 7vw, 2.3rem); margin: 0; text-align: center; text-shadow: 0 0 15px rgba(0,242,255,0.5); }
+            .hub-subtitle { color: #bc13fe; font-size: 0.55rem; letter-spacing: 5px; margin-top: 5px; margin-bottom: 30px; opacity: 0.9; }
 
-            .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
-            .btn { 
-                aspect-ratio: 1/1; border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 15px; 
-                display: flex; flex-direction: column; align-items: center; justify-content: center; 
-                color: #00f2ff; transition: 0.3s; padding: 10px; text-align: center;
-                background: rgba(255,255,255,0.02); backdrop-filter: blur(8px); cursor: pointer; text-decoration: none;
-            }
-            .btn:hover { border-color: #00f2ff; box-shadow: 0 0 20px rgba(0, 242, 255, 0.2); transform: translateY(-3px); }
+            /* THICK NEON GRID */
+            .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
             
-            .title-txt { font-size: 0.65rem; font-weight: 900; pointer-events: none; }
-            .desc-txt { font-family: 'Rajdhani'; font-size: 0.55rem; color: #888; margin-top: 6px; pointer-events: none; line-height: 1.1; }
+            .btn { 
+                aspect-ratio: 1/1; 
+                /* THICK OUTLINE START */
+                border: 3px solid #00f2ff; 
+                box-shadow: 0 0 10px rgba(0, 242, 255, 0.4), inset 0 0 10px rgba(0, 242, 255, 0.2);
+                border-radius: 20px; 
+                display: flex; flex-direction: column; align-items: center; justify-content: center; 
+                color: #00f2ff; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); padding: 10px; text-align: center;
+                background: rgba(255,255,255,0.02); backdrop-filter: blur(8px); cursor: pointer; text-decoration: none;
+                animation: neon-breath 3s infinite alternate;
+            }
+
+            @keyframes neon-breath {
+                from { border-width: 3px; box-shadow: 0 0 8px #00f2ff, inset 0 0 5px #00f2ff; }
+                to { border-width: 3px; box-shadow: 0 0 18px #00f2ff, inset 0 0 12px #00f2ff; }
+            }
+
+            .btn:hover { 
+                border-color: #bc13fe; 
+                color: #bc13fe;
+                box-shadow: 0 0 35px #bc13fe, inset 0 0 20px #bc13fe;
+                transform: translateY(-5px) scale(1.02);
+                animation: none; /* Stop breathing on hover */
+            }
+            
+            .title-txt { font-size: 0.7rem; font-weight: 900; pointer-events: none; letter-spacing: 1px; }
+            .desc-txt { font-family: 'Rajdhani'; font-size: 0.58rem; color: #aaa; margin-top: 8px; pointer-events: none; line-height: 1.2; padding: 0 5px; }
 
             .footer-credit { position: fixed; bottom: 30px; color: #bc13fe; font-size: 0.75rem; letter-spacing: 4px; font-weight: bold; text-transform: uppercase; z-index: 10; }
         </style>
