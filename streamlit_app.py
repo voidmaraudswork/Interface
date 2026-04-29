@@ -2,7 +2,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 # 1. PAGE CONFIG & UI CLEANUP
-st.set_page_config(page_title="NEXUS COMMAND", layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="VOID CORE | Terminal", layout="wide", initial_sidebar_state="collapsed")
 
 st.markdown("""
     <style>
@@ -23,66 +23,79 @@ components.html("""
         
         #bg-stars { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
         
-        /* WARP OVERLAY (No Lightning) */
+        /* VOID OVERLAY */
         #warp-overlay { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-            background: rgba(0,0,0,0.95); display: none; flex-direction: column; 
+            background: rgba(0,0,0,0.96); display: none; flex-direction: column; 
             justify-content: center; align-items: center; z-index: 100; text-align: center; 
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
         }
 
+        /* LOADING PHRASE STYLE */
+        .portal-msg {
+            color: #bc13fe; font-size: 0.6rem; letter-spacing: 4px; margin-bottom: 15px;
+            animation: blink 0.8s infinite alternate; font-weight: bold;
+        }
+        @keyframes blink { from { opacity: 0.4; } to { opacity: 1; } }
+
         /* NEON LOADING BAR */
-        .loader-container { width: 280px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 30px; overflow: hidden; }
+        .loader-container { width: 260px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 30px; overflow: hidden; }
         .loader-fill { width: 0%; height: 100%; background: #00f2ff; box-shadow: 0 0 15px #00f2ff; }
 
         /* GRID SYSTEM - SIDE BY SIDE MOBILE */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 92%; max-width: 500px; z-index: 10; margin-top: 20px; }
         
         .btn { 
-            aspect-ratio: 1/1; border: 1px solid rgba(0, 242, 255, 0.3); border-radius: 20px; 
+            aspect-ratio: 1/1; border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 20px; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
             color: #00f2ff; transition: 0.3s; padding: 15px; text-align: center;
             background: rgba(255,255,255,0.02); backdrop-filter: blur(5px); cursor: pointer;
         }
-        .btn:hover { border-color: #00f2ff; box-shadow: 0 0 20px rgba(0, 242, 255, 0.2); transform: translateY(-5px); }
+        .btn:hover { border-color: #00f2ff; box-shadow: 0 0 25px rgba(0, 242, 255, 0.2); transform: translateY(-5px); }
 
         .title-txt { font-size: 0.75rem; font-weight: 900; pointer-events: none; letter-spacing: 1px; }
-        .desc-txt { font-family: 'Rajdhani'; font-size: 0.6rem; color: #ccc; margin-top: 8px; pointer-events: none; line-height: 1.1; }
+        .desc-txt { font-family: 'Rajdhani'; font-size: 0.6rem; color: #888; margin-top: 8px; pointer-events: none; line-height: 1.1; }
 
-        .warp-h { color: #00f2ff; font-size: 1.5rem; letter-spacing: 5px; margin: 0; text-transform: uppercase; }
-        .warp-p { font-family: 'Rajdhani'; color: #888; letter-spacing: 2px; font-size: 0.8rem; margin-top: 10px; padding: 0 20px; }
+        .warp-h { color: #00f2ff; font-size: 1.4rem; letter-spacing: 4px; margin: 0; text-transform: uppercase; }
+        .warp-p { font-family: 'Rajdhani'; color: #555; letter-spacing: 2px; font-size: 0.8rem; margin-top: 8px; padding: 0 30px; }
     </style>
 </head>
 <body>
     <canvas id="bg-stars"></canvas>
     
     <div id="warp-overlay">
+        <!-- THE REQUESTED PHRASE -->
+        <p class="portal-msg">THE PORTAL TO VOID IS OPENING...</p>
+        
         <h1 class="warp-h" id="warp-title"></h1>
         <p class="warp-p" id="warp-desc"></p>
+        
         <div class="loader-container">
             <div id="fill" class="loader-fill"></div>
         </div>
-        <p style="font-size: 0.5rem; margin-top: 15px; color: #00f2ff; letter-spacing: 4px; opacity: 0.6;">SYNCING DATA MODULE</p>
+        
+        <p style="font-size: 0.45rem; margin-top: 15px; color: #444; letter-spacing: 3px;">SECURE CONNECTION ESTABLISHED</p>
     </div>
 
-    <h1 style="color:#00f2ff; letter-spacing:15px; font-size: 2.2rem; margin-bottom: 10px;">NEXUS</h1>
-    <p style="color: #bc13fe; font-size: 0.6rem; letter-spacing: 5px; margin-bottom: 30px;">PORTAL OPERATIONAL</p>
+    <!-- MAIN INTERFACE -->
+    <h1 style="color:#00f2ff; letter-spacing:18px; font-size: 2.2rem; margin-bottom: 5px;">VOID CORE</h1>
+    <p style="color: #bc13fe; font-size: 0.55rem; letter-spacing: 6px; margin-bottom: 35px; opacity: 0.8;">TERMINAL INTERFACE</p>
 
     <div class="grid">
         <!-- Module 1 -->
-        <div class="btn" onclick="warp('AI CODE FLATTENER', 'Flattening zip codes to MD files', 'https://aicodeflat.streamlit.app/')">
+        <div class="btn" onclick="warp('AI CODE FLATTENER', 'DECONSTRUCTING ZIP TO MARKDOWN', 'https://aicodeflat.streamlit.app/')">
             <div class="title-txt">AI CODE FLATTENER</div>
             <div class="desc-txt">Flattening zip codes to MD files</div>
         </div>
         <!-- Module 2 -->
-        <div class="btn" onclick="warp('MOVIE UPDATES', 'Movie updates every 5 mins with search facility', 'https://movievoidup.streamlit.app/')">
+        <div class="btn" onclick="warp('MOVIE UPDATES', 'REAL-TIME CINEMATIC SYNC', 'https://movievoidup.streamlit.app/')">
             <div class="title-txt">MOVIE UPDATES</div>
             <div class="desc-txt">Updates every 5 mins with search facility</div>
         </div>
         <!-- Module 3 -->
-        <div class="btn" onclick="warp('MOVIE VIBE SEARCH', 'Search movies by genre, vibe, type etc', 'https://getmoviewithvoid.streamlit.app/')">
+        <div class="btn" onclick="warp('MOVIE VIBE SEARCH', 'GENRE & EMOTION FILTERING', 'https://getmoviewithvoid.streamlit.app/')">
             <div class="title-txt">MOVIE VIBE SEARCH</div>
-            <div class="desc-txt">Search by genre, vibe, type etc</div>
+            <div class="desc-txt">Search movies by genre, vibe, type etc</div>
         </div>
     </div>
 
@@ -110,18 +123,17 @@ components.html("""
             let start = null;
             function step(timestamp) {
                 if (!start) start = timestamp;
-                let progress = (timestamp - start) / 2000; // Exact 2 Seconds
+                let progress = (timestamp - start) / 2000; // 2 Second Load
                 fill.style.width = Math.min(progress * 100, 100) + '%';
 
                 if (progress < 1) {
                     requestAnimationFrame(step);
                 } else {
                     window.open(url, '_blank');
-                    // Reset overlay after launch
                     setTimeout(() => { 
                         overlay.style.display = 'none'; 
                         fill.style.width = '0%'; 
-                    }, 800);
+                    }, 1000);
                 }
             }
             requestAnimationFrame(step);
@@ -129,4 +141,4 @@ components.html("""
     </script>
 </body>
 </html>
-""", height=900)
+""", height=1000)
