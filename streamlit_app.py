@@ -13,7 +13,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 2. THE ENGINE
+# 2. THE CORE ENGINE
 components.html("""
 <!DOCTYPE html>
 <html>
@@ -21,43 +21,40 @@ components.html("""
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@700&display=swap" rel="stylesheet">
     <style>
         body { margin: 0; background: #020205; color: white; font-family: 'Orbitron'; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; width: 100vw; overflow: hidden; }
-        
         #bg-stars { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
 
         /* BOOT SCREEN */
-        #boot-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 5000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        #boot-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 9000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: 0.8s; }
+        .boot-bar { width: 200px; height: 2px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-top:20px; }
         .boot-fill { width: 0%; height: 100%; background: #bc13fe; animation: boot-load 3s forwards ease-in-out; }
         @keyframes boot-load { to { width: 100%; } }
 
-        /* ATTENTION GRABBING POPUP (PROTOCOL LOCK) */
-        #protocol-popup { 
+        /* SELECTION POPUP */
+        #selection-popup { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-            background: rgba(0,0,0,0.9); z-index: 4000; display: none; 
+            background: rgba(0,0,0,0.95); z-index: 8000; display: none; 
             flex-direction: column; justify-content: center; align-items: center; 
-            backdrop-filter: blur(15px); text-align: center;
+            backdrop-filter: blur(20px); text-align: center;
         }
-        .alert-box { 
-            width: 85%; max-width: 350px; padding: 30px; border: 2px solid #ff0055; 
-            background: #110005; border-radius: 20px; box-shadow: 0 0 30px #ff0055;
-            animation: glitch-border 0.3s infinite;
+        .modal-box { 
+            width: 90%; max-width: 450px; padding: 30px; border: 2px solid #00f2ff; 
+            background: #050505; border-radius: 25px; box-shadow: 0 0 40px rgba(0, 242, 255, 0.2);
         }
-        @keyframes glitch-border { 0% { border-color: #ff0055; } 50% { border-color: #00f2ff; } 100% { border-color: #ff0055; } }
-        
-        .alert-h { color: #ff0055; font-size: 1.2rem; letter-spacing: 3px; margin-bottom: 15px; }
-        .alert-p { font-family: 'Rajdhani'; color: #fff; font-size: 0.9rem; line-height: 1.4; margin-bottom: 25px; }
+        .select-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 25px 0; }
+        .select-item { 
+            padding: 10px; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; 
+            font-size: 0.5rem; cursor: pointer; transition: 0.3s;
+        }
+        .select-item.active { border-color: #bc13fe; background: rgba(188, 19, 254, 0.2); color: white; box-shadow: 0 0 15px #bc13fe; }
         .confirm-btn { 
-            padding: 12px 30px; border: 1px solid #ff0055; background: transparent; 
-            color: #ff0055; font-family: 'Orbitron'; cursor: pointer; transition: 0.3s;
+            width: 100%; padding: 15px; border: 1px solid #00f2ff; background: transparent; 
+            color: #00f2ff; font-family: 'Orbitron'; cursor: pointer; opacity: 0.3; pointer-events: none;
         }
-        .confirm-btn:hover { background: #ff0055; color: white; }
+        .confirm-btn.ready { opacity: 1; pointer-events: auto; background: rgba(0, 242, 255, 0.1); }
 
-        /* WARP OVERLAY */
-        #warp-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.98); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 3000; text-align: center; }
-        .warp-fill { width: 0%; height: 3px; background: #00f2ff; box-shadow: 0 0 15px #00f2ff; }
-
-        /* HUB UI */
-        .main-container { display: flex; flex-direction: column; align-items: center; width: 90%; max-width: 440px; margin-top: -30px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; width: 100%; margin-top: 20px;}
+        /* MAIN HUB UI */
+        .main-container { display: flex; flex-direction: column; align-items: center; width: 90%; max-width: 440px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; margin-top: 20px; }
         
         .btn-container {
             position: relative; aspect-ratio: 1/1; border-radius: 18px; padding: 3px; 
@@ -67,8 +64,25 @@ components.html("""
         }
         @keyframes flow { 0% { background-position: 0% 0%; } 100% { background-position: 0% 200%; } }
         
-        .btn-inner { width: 100%; height: 100%; background: #08080a; border-radius: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #00f2ff; }
-        .locked { opacity: 0.2; filter: grayscale(1); cursor: not-allowed; }
+        .btn-inner { width: 100%; height: 100%; background: #08080a; border-radius: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #00f2ff; text-align: center; }
+        
+        /* RED CROSS LOCK */
+        .locked-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 0, 0, 0.2); backdrop-filter: grayscale(1) blur(2px);
+            z-index: 50; display: flex; justify-content: center; align-items: center;
+            pointer-events: auto; cursor: not-allowed;
+        }
+        .locked-overlay::before, .locked-overlay::after {
+            content: ''; position: absolute; width: 80%; height: 6px; background: #ff0055;
+            box-shadow: 0 0 20px #ff0055; border-radius: 10px;
+        }
+        .locked-overlay::before { transform: rotate(45deg); }
+        .locked-overlay::after { transform: rotate(-45deg); }
+
+        /* WARP */
+        #warp-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 7000; }
+        .warp-fill { width: 0%; height: 2px; background: #00f2ff; box-shadow: 0 0 15px #00f2ff; }
     </style>
 </head>
 <body>
@@ -76,25 +90,32 @@ components.html("""
 
     <!-- 1. BOOT SEQUENCE -->
     <div id="boot-screen">
-        <div style="color:#00f2ff; letter-spacing:5px; margin-bottom:20px;">Portal to void core is opening...</div>
-        <div style="width:200px; height:2px; background:rgba(255,255,255,0.1);"><div class="boot-fill"></div></div>
+        <div style="color:#00f2ff; letter-spacing:5px;">PORTAL TO VOID CORE IS OPENING...</div>
+        <div class="boot-bar"><div class="boot-fill"></div></div>
     </div>
 
-    <!-- 2. THE CHALLENGING POPUP (PROTOCOL 24) -->
-    <div id="protocol-popup">
-        <div class="alert-box">
-            <h2 class="alert-h">⚠️ QUOTA PROTOCOL</h2>
-            <p class="alert-p" id="alert-text">ATTENTION: You can only choose 2 of the buttons for 24 hours. Choose your path wisely, Marauder.</p>
-            <button class="confirm-btn" id="protocol-confirm">ACCEPT & PROCEED</button>
+    <!-- 2. SELECTION PROTOCOL POPUP -->
+    <div id="selection-popup">
+        <div class="modal-box">
+            <h2 style="color:#00f2ff; font-size:1rem; letter-spacing:2px; margin:0;">SELECTION PROTOCOL</h2>
+            <p style="font-family:'Rajdhani'; color:#888; font-size:0.7rem; margin-top:10px;">Select exactly 2 modules to stabilize. The remaining path will be locked for 24 hours.</p>
+            
+            <div class="select-grid">
+                <div class="select-item" onclick="toggleSelect(this, 'btn-1')">AI CODE<br>FLATTENER</div>
+                <div class="select-item" onclick="toggleSelect(this, 'btn-2')">MOVIE<br>UPDATES</div>
+                <div class="select-item" onclick="toggleSelect(this, 'btn-3')">VIBE<br>SEARCH</div>
+            </div>
+
+            <button class="confirm-btn" id="confirm-protocol" onclick="finalizeChoices()">INITIALIZE GATEWAY</button>
         </div>
     </div>
 
     <!-- 3. WARP OVERLAY -->
     <div id="warp-overlay">
-        <p style="color:#bc13fe; font-size:0.7rem; letter-spacing:4px;">THE PORTAL TO VOID IS OPENING...</p>
-        <h1 id="warp-title" style="color:#00f2ff; font-size:1.1rem; margin:0;"></h1>
-        <div style="width:200px; height:2px; background:rgba(255,255,255,0.1); margin: 20px 0;"><div id="fill" class="warp-fill"></div></div>
-        <p style="color:#bc13fe; font-size:0.5rem; letter-spacing:3px;">VOIDMARAUDS</p>
+        <p style="color:#bc13fe; font-size:0.6rem; letter-spacing:4px;">THE PORTAL TO VOID IS OPENING...</p>
+        <h1 id="warp-title" style="color:#00f2ff; font-size:1.1rem;"></h1>
+        <div style="width:200px; height:2px; background:rgba(255,255,255,0.1); margin:20px 0;"><div id="fill" class="warp-fill"></div></div>
+        <p style="font-size:0.5rem; color:#bc13fe; letter-spacing:3px;">VOIDMARAUDS</p>
     </div>
 
     <div class="main-container">
@@ -102,14 +123,14 @@ components.html("""
         <p style="color:#bc13fe; font-size:0.55rem; letter-spacing:6px; margin-bottom:30px;">TERMINAL ACCESS</p>
 
         <div class="grid">
-            <div class="btn-container" id="btn-1" onclick="handleBtn('AI CODE FLATTENER', 'Flattening zip codes to MD files', 'https://aicodeflat.streamlit.app/')">
-                <div class="btn-inner"><b>AI CODE</b><br><small style="font-size:0.5rem; color:#888;">FLATTENER</small></div>
+            <div class="btn-container" id="btn-1" onclick="handleLaunch('btn-1', 'AI CODE FLATTENER', 'DECONSTRUCTING ZIP TO MARKDOWN', 'https://aicodeflat.streamlit.app/')">
+                <div class="btn-inner"><b>AI CODE</b></div>
             </div>
-            <div class="btn-container" id="btn-2" onclick="handleBtn('MOVIE UPDATES', 'Updates every 5 mins with search', 'https://movievoidup.streamlit.app/')">
-                <div class="btn-inner"><b>MOVIE</b><br><small style="font-size:0.5rem; color:#888;">UPDATES</small></div>
+            <div class="btn-container" id="btn-2" onclick="handleLaunch('btn-2', 'MOVIE UPDATES', 'REAL-TIME CINEMATIC SYNC', 'https://movievoidup.streamlit.app/')">
+                <div class="btn-inner"><b>MOVIE UPDATES</b></div>
             </div>
-            <div class="btn-container" id="btn-3" onclick="handleBtn('VIBE SEARCH', 'Search movies by genre, vibe, type etc', 'https://getmoviewithvoid.streamlit.app/')">
-                <div class="btn-inner"><b>VIBE</b><br><small style="font-size:0.5rem; color:#888;">SEARCH</small></div>
+            <div class="btn-container" id="btn-3" onclick="handleLaunch('btn-3', 'VIBE SEARCH', 'GENRE & EMOTION FILTERING', 'https://getmoviewithvoid.streamlit.app/')">
+                <div class="btn-inner"><b>VIBE SEARCH</b></div>
             </div>
         </div>
     </div>
@@ -118,7 +139,7 @@ components.html("""
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // Starfield Logic
+        // Starfield Setup
         const sS=new THREE.Scene(), sC=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
         const sR=new THREE.WebGLRenderer({canvas:document.getElementById('bg-stars'), alpha:true});
         sR.setSize(window.innerWidth,window.innerHeight);
@@ -129,44 +150,70 @@ components.html("""
         sC.position.z=1;
         function anim(){ requestAnimationFrame(anim); sS.rotation.y+=0.0004; sR.render(sS,sC); } anim();
 
-        setTimeout(() => { document.getElementById('boot-screen').style.display='none'; }, 3200);
+        // State & Protocol Logic
+        let selectedIds = [];
+        let storage = JSON.parse(localStorage.getItem('void_protocol_v3')) || { active: [], locked: [], expiry: null };
 
-        // --- PROTOCOL LOGIC ---
-        let storage = JSON.parse(localStorage.getItem('void_core_data')) || { choices: [], timestamp: null };
-        
-        // Reset if 24 hours passed
-        if(storage.timestamp && (Date.now() - storage.timestamp > 86400000)) {
-            storage = { choices: [], timestamp: null };
-            localStorage.setItem('void_core_data', JSON.stringify(storage));
+        // Check Expiry
+        if(storage.expiry && Date.now() > storage.expiry) {
+            storage = { active: [], locked: [], expiry: null };
+            localStorage.removeItem('void_protocol_v3');
         }
 
-        function handleBtn(title, desc, url) {
-            if (storage.choices.includes(title)) {
-                runWarp(title, desc, url);
-                return;
-            }
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('boot-screen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('boot-screen').style.display = 'none';
+                    if(!storage.expiry) {
+                        document.getElementById('selection-popup').style.display = 'flex';
+                    } else {
+                        applyLocks();
+                    }
+                }, 800);
+            }, 3000);
+        };
 
-            if (storage.choices.length >= 2) {
-                document.getElementById('alert-text').innerText = "LIMIT REACHED: Your 24-hour quota is exhausted. Access to new modules is denied.";
-                document.getElementById('protocol-popup').style.display = 'flex';
-                document.getElementById('protocol-confirm').onclick = () => { document.getElementById('protocol-popup').style.display='none'; };
-                return;
+        function toggleSelect(el, id) {
+            if(selectedIds.includes(id)) {
+                selectedIds = selectedIds.filter(i => i !== id);
+                el.classList.remove('active');
+            } else {
+                if(selectedIds.length < 2) {
+                    selectedIds.push(id);
+                    el.classList.add('active');
+                }
             }
+            const btn = document.getElementById('confirm-protocol');
+            if(selectedIds.length === 2) btn.classList.add('ready');
+            else btn.classList.remove('ready');
+        }
 
-            // Show selection warning
-            document.getElementById('alert-text').innerText = `CRITICAL CHOICE: Opening "${title}" will use 1 of your 2 daily slots. You cannot undo this for 24 hours. Continue?`;
-            document.getElementById('protocol-popup').style.display = 'flex';
-            
-            document.getElementById('protocol-confirm').onclick = () => {
-                storage.choices.push(title);
-                if(!storage.timestamp) storage.timestamp = Date.now();
-                localStorage.setItem('void_core_data', JSON.stringify(storage));
-                document.getElementById('protocol-popup').style.display='none';
-                runWarp(title, desc, url);
+        function finalizeChoices() {
+            const allIds = ['btn-1', 'btn-2', 'btn-3'];
+            const locked = allIds.filter(id => !selectedIds.includes(id));
+            storage = {
+                active: selectedIds,
+                locked: locked,
+                expiry: Date.now() + 86400000 // 24 Hours
             };
+            localStorage.setItem('void_protocol_v3', JSON.stringify(storage));
+            document.getElementById('selection-popup').style.display = 'none';
+            applyLocks();
         }
 
-        function runWarp(title, desc, url) {
+        function applyLocks() {
+            storage.locked.forEach(id => {
+                const btn = document.getElementById(id);
+                btn.style.pointerEvents = 'none';
+                const overlay = document.createElement('div');
+                overlay.className = 'locked-overlay';
+                btn.appendChild(overlay);
+            });
+        }
+
+        function handleLaunch(id, title, desc, url) {
+            if(storage.locked.includes(id)) return;
             const overlay = document.getElementById('warp-overlay');
             const fill = document.getElementById('fill');
             document.getElementById('warp-title').innerText = title;
