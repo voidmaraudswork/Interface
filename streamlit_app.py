@@ -23,13 +23,13 @@ components.html("""
         body { margin: 0; background: #020205; color: white; font-family: 'Orbitron'; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; width: 100vw; overflow: hidden; }
         #bg-stars { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
 
-        /* BOOT SCREEN */
+        /* PHASE 1: BOOT SCREEN */
         #boot-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 9000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .boot-bar { width: 200px; height: 2px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-top:20px; }
         .boot-fill { width: 0%; height: 100%; background: #bc13fe; animation: boot-load 3s forwards ease-in-out; }
         @keyframes boot-load { to { width: 100%; } }
 
-        /* SELECTION PROTOCOL POPUP (Appears on first click) */
+        /* PHASE 2: SELECTION PROTOCOL POPUP */
         #selection-popup { 
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
             background: rgba(0,0,0,0.95); z-index: 8000; display: none; 
@@ -37,8 +37,8 @@ components.html("""
             backdrop-filter: blur(25px); text-align: center;
         }
         .modal-box { 
-            width: 85%; max-width: 450px; padding: 25px; border: 2px solid #00f2ff; 
-            background: #050505; border-radius: 25px; box-shadow: 0 0 40px rgba(0, 242, 255, 0.2);
+            width: 85%; max-width: 450px; padding: 25px; border: 3px solid #00f2ff; 
+            background: #050505; border-radius: 25px; box-shadow: 0 0 40px rgba(0, 242, 255, 0.4);
         }
         .select-grid { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
         .select-item { 
@@ -55,8 +55,9 @@ components.html("""
         /* MAIN HUB UI */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 92%; max-width: 440px; margin-top: 15px; }
         
+        /* FLOWING NEON BORDERS */
         .btn-container {
-            position: relative; aspect-ratio: 1/1; border-radius: 18px; padding: 2px; 
+            position: relative; aspect-ratio: 1/1; border-radius: 18px; padding: 3px; 
             background: linear-gradient(0deg, #00f2ff, #bc13fe, #00f2ff);
             background-size: 100% 200%; animation: flow 3s linear infinite;
             overflow: hidden; cursor: pointer;
@@ -64,39 +65,41 @@ components.html("""
         @keyframes flow { 0% { background-position: 0% 0%; } 100% { background-position: 0% 200%; } }
         
         .btn-inner { width: 100%; height: 100%; background: #08080a; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-        .title-sm { font-size: 0.65rem; color: #00f2ff; font-weight: 900; padding: 0 5px; }
+        .title-sm { font-size: 0.65rem; color: #00f2ff; font-weight: 900; padding: 0 5px; text-transform: uppercase; }
         .desc-sm { font-family: 'Rajdhani'; font-size: 0.5rem; color: #777; margin-top: 5px; padding: 0 10px; line-height: 1.1; }
 
-        /* NEON RED CROSS */
+        /* NEON RED CROSS FOR LOCKED MODULE */
         .locked-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(255, 0, 0, 0.15); backdrop-filter: grayscale(1) blur(3px);
             z-index: 100; display: flex; justify-content: center; align-items: center;
         }
         .locked-overlay::before, .locked-overlay::after {
-            content: ''; position: absolute; width: 85%; height: 5px; background: #ff0055;
+            content: ''; position: absolute; width: 85%; height: 6px; background: #ff0055;
             box-shadow: 0 0 20px #ff0055; border-radius: 10px;
         }
         .locked-overlay::before { transform: rotate(45deg); }
         .locked-overlay::after { transform: rotate(-45deg); }
 
-        /* WARP */
+        /* PHASE 3: WARP OVERLAY */
         #warp-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 7000; }
-        .warp-fill { width: 0%; height: 2px; background: #00f2ff; box-shadow: 0 0 15px #00f2ff; }
+        .warp-fill { width: 0%; height: 3px; background: #00f2ff; box-shadow: 0 0 15px #00f2ff; }
     </style>
 </head>
 <body>
     <canvas id="bg-stars"></canvas>
 
+    <!-- BOOT SCREEN -->
     <div id="boot-screen">
-        <div style="color:#00f2ff; letter-spacing:5px; font-size:0.8rem;">INITIALIZING VOID CORE...</div>
+        <div style="color:#00f2ff; letter-spacing:5px; font-size:0.8rem; text-align:center;">PORTAL TO VOID CORE IS OPENING...</div>
         <div class="boot-bar"><div class="boot-fill"></div></div>
     </div>
 
+    <!-- SELECTION POPUP -->
     <div id="selection-popup">
         <div class="modal-box">
             <h2 style="color:#00f2ff; font-size:0.9rem; letter-spacing:2px; margin:0;">SELECT 2 MODULES</h2>
-            <p style="font-family:'Rajdhani'; color:#777; font-size:0.7rem; margin-top:8px;">You can only open 2 modules per 24 hours. Choose now.</p>
+            <p style="font-family:'Rajdhani'; color:#777; font-size:0.7rem; margin-top:8px;">PORTAL TO VOID CORE IS OPENING... <br>Choose 2 modules to stabilize for 24 hours.</p>
             
             <div class="select-grid">
                 <div class="select-item" onclick="toggleSelect(this, 'btn-1')">
@@ -116,13 +119,15 @@ components.html("""
         </div>
     </div>
 
+    <!-- LOADING WARP -->
     <div id="warp-overlay">
-        <p style="color:#bc13fe; font-size:0.6rem; letter-spacing:4px;">THE PORTAL TO VOID IS OPENING...</p>
-        <h1 id="warp-title" style="color:#00f2ff; font-size:1.2rem;"></h1>
-        <div style="width:200px; height:2px; background:rgba(255,255,255,0.1); margin:20px 0;"><div id="fill" class="warp-fill"></div></div>
-        <p style="font-size:0.5rem; color:#bc13fe; letter-spacing:3px;">VOIDMARAUDS</p>
+        <p style="color:#bc13fe; font-size:0.6rem; letter-spacing:4px; font-weight:bold;">PORTAL TO VOID CORE IS OPENING...</p>
+        <h1 id="warp-title" style="color:#00f2ff; font-size:1.2rem; margin:10px 0;"></h1>
+        <div style="width:200px; height:3px; background:rgba(255,255,255,0.1); margin:15px 0;"><div id="fill" class="warp-fill"></div></div>
+        <p style="font-size:0.55rem; color:#bc13fe; letter-spacing:4px; font-weight:bold;">CREDIT: VOIDMARAUDS</p>
     </div>
 
+    <!-- MAIN INTERFACE -->
     <h1 style="color:#00f2ff; letter-spacing:15px; font-size: 2rem; margin:0; margin-top:-20px;">VOID CORE</h1>
     <p style="color:#bc13fe; font-size:0.5rem; letter-spacing:6px; margin-bottom:20px;">TERMINAL ACCESS</p>
 
@@ -138,10 +143,11 @@ components.html("""
         </div>
     </div>
 
-    <div style="position:fixed; bottom:30px; color:#bc13fe; font-size:0.8rem; font-weight:bold; letter-spacing:5px;">VOIDMARAUDS</div>
+    <div style="position:fixed; bottom:30px; color:#bc13fe; font-size:0.8rem; font-weight:bold; letter-spacing:6px;">VOIDMARAUDS</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
+        // Starfield
         const sS=new THREE.Scene(), sC=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
         const sR=new THREE.WebGLRenderer({canvas:document.getElementById('bg-stars'), alpha:true});
         sR.setSize(window.innerWidth,window.innerHeight);
@@ -152,8 +158,9 @@ components.html("""
         sC.position.z=1;
         function anim(){ requestAnimationFrame(anim); sS.rotation.y+=0.0004; sR.render(sS,sC); } anim();
 
-        let storage = JSON.parse(localStorage.getItem('void_protocol_v5')) || { active: [], locked: [], expiry: null };
-        if(storage.expiry && Date.now() > storage.expiry) { storage = { active: [], locked: [], expiry: null }; localStorage.removeItem('void_protocol_v5'); }
+        // Local Storage Protocol
+        let storage = JSON.parse(localStorage.getItem('void_final_v1')) || { active: [], locked: [], expiry: null };
+        if(storage.expiry && Date.now() > storage.expiry) { storage = { active: [], locked: [], expiry: null }; localStorage.removeItem('void_final_v1'); }
 
         window.onload = () => {
             setTimeout(() => { document.getElementById('boot-screen').style.display = 'none'; if(storage.expiry) applyLocks(); }, 3200);
@@ -176,7 +183,7 @@ components.html("""
         function finalizeChoices() {
             const allIds = ['btn-1', 'btn-2', 'btn-3'];
             storage = { active: selectedIds, locked: allIds.filter(id => !selectedIds.includes(id)), expiry: Date.now() + 86400000 };
-            localStorage.setItem('void_protocol_v5', JSON.stringify(storage));
+            localStorage.setItem('void_final_v1', JSON.stringify(storage));
             document.getElementById('selection-popup').style.display = 'none';
             applyLocks();
         }
@@ -186,9 +193,7 @@ components.html("""
                 const btn = document.getElementById(id);
                 btn.style.pointerEvents = 'none';
                 if(!btn.querySelector('.locked-overlay')) {
-                    const overlay = document.createElement('div');
-                    overlay.className = 'locked-overlay';
-                    btn.appendChild(overlay);
+                    const overlay = document.createElement('div'); overlay.className = 'locked-overlay'; btn.appendChild(overlay);
                 }
             });
         }
