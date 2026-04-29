@@ -2,42 +2,48 @@ import streamlit as st
 import streamlit.components.v1 as components
 import time
 
-# 1. PAGE CONFIG & UI HIDING
+# 1. PAGE CONFIG & UI STRIPPING
 st.set_page_config(page_title="VOID CORE", layout="wide", initial_sidebar_state="collapsed")
 
 st.markdown("""
     <style>
+    /* Kill all Streamlit UI and scrolling */
     #MainMenu, header, footer, [data-testid="stHeader"], [data-testid="stDecoration"] { visibility: hidden !important; }
-    .stApp { background: #020205 !important; }
-    .main .block-container { padding: 0 !important; max-width: 100vw !important; }
+    .stApp { background: #020205 !important; overflow: hidden !important; }
+    .main .block-container { padding: 0 !important; max-width: 100vw !important; height: 100vh !important; overflow: hidden !important; }
+    iframe { border: none !important; }
     </style>
 """, unsafe_allow_html=True)
 
-# 2. SESSION STATE FOR BOOT SEQUENCE
+# 2. SESSION STATE FOR BOOTUP
 if 'booted' not in st.session_state:
     st.session_state.booted = False
 
-# --- PHASE 1: THE 3-SEC BOOTUP WINDOW ---
+# --- PHASE 1: THE 3-SEC BOOTUP ---
 if not st.session_state.booted:
     components.html("""
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap');
-            body { background: #000; margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; font-family: 'Orbitron'; overflow: hidden; }
-            .msg { color: #00f2ff; font-size: 1.2rem; letter-spacing: 5px; text-align: center; text-shadow: 0 0 15px #00f2ff; margin-bottom: 25px; text-transform: uppercase; }
-            .bar-bg { width: 280px; height: 2px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
+            body { 
+                background: #000; margin: 0; overflow: hidden; 
+                display: flex; flex-direction: column; justify-content: center; align-items: center; 
+                height: 100vh; font-family: 'Orbitron', sans-serif; 
+            }
+            .msg { color: #00f2ff; font-size: clamp(1rem, 5vw, 1.5rem); letter-spacing: 5px; text-align: center; margin-bottom: 25px; text-transform: uppercase; }
+            .bar-bg { width: 250px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
             .bar-fill { width: 0%; height: 100%; background: #bc13fe; box-shadow: 0 0 15px #bc13fe; animation: load 3s forwards ease-in-out; }
             @keyframes load { to { width: 100%; } }
-            .credit { position: fixed; bottom: 20px; color: rgba(255,255,255,0.3); font-size: 0.6rem; letter-spacing: 3px; }
+            .credit { position: fixed; bottom: 30px; color: #bc13fe; font-size: 0.8rem; letter-spacing: 5px; font-weight: bold; }
         </style>
         <div class="msg">Portal to void core is opening...</div>
         <div class="bar-bg"><div class="bar-fill"></div></div>
-        <div class="credit">BY VOIDMARAUDS</div>
+        <div class="credit">CREDIT: VOIDMARAUDS</div>
     """, height=1000)
     time.sleep(3.5)
     st.session_state.booted = True
     st.rerun()
 
-# --- PHASE 2: THE MAIN HUB ---
+# --- PHASE 2: THE MAIN DYNAMIC HUB ---
 else:
     components.html("""
     <!DOCTYPE html>
@@ -45,7 +51,11 @@ else:
     <head>
         <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500&display=swap" rel="stylesheet">
         <style>
-            body { margin: 0; background: #020205; color: white; font-family: 'Orbitron'; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; }
+            body { 
+                margin: 0; background: #020205; color: white; font-family: 'Orbitron'; 
+                display: flex; flex-direction: column; align-items: center; justify-content: center; 
+                height: 100vh; width: 100vw; overflow: hidden; 
+            }
             #bg-stars { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
             
             /* LOADING OVERLAY */
@@ -54,61 +64,67 @@ else:
                 background: rgba(0,0,0,0.98); display: none; flex-direction: column; 
                 justify-content: center; align-items: center; z-index: 100; text-align: center; 
             }
-            .portal-msg { color: #bc13fe; font-size: 0.6rem; letter-spacing: 4px; margin-bottom: 15px; font-weight: bold; }
+            .portal-msg { color: #bc13fe; font-size: 0.7rem; letter-spacing: 4px; margin-bottom: 15px; font-weight: 900; }
             .loader-container { width: 260px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 30px; overflow: hidden; }
             .loader-fill { width: 0%; height: 100%; background: #00f2ff; box-shadow: 0 0 15px #00f2ff; }
 
-            /* HUB UI */
-            .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 92%; max-width: 500px; z-index: 10; margin-top: 20px; }
+            /* CENTERED HUB UI */
+            .main-container { display: flex; flex-direction: column; align-items: center; width: 90%; max-width: 600px; }
+            .hub-title { color: #00f2ff; letter-spacing: 18px; font-size: clamp(1.8rem, 8vw, 2.5rem); margin: 0; text-align: center; }
+            .hub-subtitle { color: #bc13fe; font-size: 0.6rem; letter-spacing: 6px; margin-top: 5px; margin-bottom: 30px; opacity: 0.9; text-align: center; }
+
+            .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; }
             .btn { 
                 aspect-ratio: 1/1; border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 20px; 
                 display: flex; flex-direction: column; align-items: center; justify-content: center; 
-                color: #00f2ff; transition: 0.3s; padding: 15px; text-align: center;
-                background: rgba(255,255,255,0.02); backdrop-filter: blur(10px); cursor: pointer;
+                color: #00f2ff; transition: 0.3s; padding: 10px; text-align: center;
+                background: rgba(255,255,255,0.02); backdrop-filter: blur(10px); cursor: pointer; text-decoration: none;
             }
             .btn:hover { border-color: #00f2ff; box-shadow: 0 0 25px rgba(0, 242, 255, 0.2); transform: translateY(-5px); }
-            .title-txt { font-size: 0.75rem; font-weight: 900; pointer-events: none; }
-            .desc-txt { font-family: 'Rajdhani'; font-size: 0.6rem; color: #888; margin-top: 8px; pointer-events: none; line-height: 1.1; }
+            
+            .title-txt { font-size: 0.7rem; font-weight: 900; pointer-events: none; text-transform: uppercase; }
+            .desc-txt { font-family: 'Rajdhani'; font-size: 0.6rem; color: #888; margin-top: 8px; pointer-events: none; line-height: 1.1; padding: 0 5px; }
 
-            /* CREDIT FOOTER */
-            .footer-credit { position: fixed; bottom: 15px; color: rgba(255,255,255,0.2); font-size: 0.5rem; letter-spacing: 4px; text-transform: uppercase; }
+            /* VISIBLE CREDIT FOOTER */
+            .footer-credit { position: fixed; bottom: 25px; color: #bc13fe; font-size: 0.7rem; letter-spacing: 5px; font-weight: bold; text-transform: uppercase; z-index: 10; }
         </style>
     </head>
     <body>
         <canvas id="bg-stars"></canvas>
         
-        <!-- CLICK LOADING OVERLAY -->
         <div id="warp-overlay">
             <p class="portal-msg">THE PORTAL TO VOID IS OPENING...</p>
-            <h1 style="color: #00f2ff; font-size: 1.4rem; letter-spacing: 4px;" id="warp-title"></h1>
-            <p style="font-family:'Rajdhani'; color:#555; font-size:0.8rem; margin-top:8px;" id="warp-desc"></p>
+            <h1 style="color: #00f2ff; font-size: 1.2rem; letter-spacing: 4px; text-align: center;" id="warp-title"></h1>
+            <p style="font-family:'Rajdhani'; color:#777; font-size:0.8rem; margin-top:8px;" id="warp-desc"></p>
             <div class="loader-container"><div id="fill" class="loader-fill"></div></div>
-            <p style="font-size: 0.4rem; margin-top: 20px; color: #333; letter-spacing: 2px;">CREDIT: VOIDMARAUDS</p>
+            <p style="font-size: 0.6rem; margin-top: 25px; color: #bc13fe; letter-spacing: 3px; font-weight: bold;">CREDIT: VOIDMARAUDS</p>
         </div>
 
-        <h1 style="color:#00f2ff; letter-spacing:18px; font-size: 2.2rem; margin-bottom: 5px;">VOID CORE</h1>
-        <p style="color: #bc13fe; font-size: 0.55rem; letter-spacing: 6px; margin-bottom: 35px; opacity: 0.8;">TERMINAL ACCESS</p>
+        <div class="main-container">
+            <h1 class="hub-title">VOID CORE</h1>
+            <p class="hub-subtitle">TERMINAL ACCESS</p>
 
-        <div class="grid">
-            <div class="btn" onclick="warp('AI CODE FLATTENER', 'DECONSTRUCTING ZIP TO MARKDOWN', 'https://aicodeflat.streamlit.app/')">
-                <div class="title-txt">AI CODE FLATTENER</div>
-                <div class="desc-txt">Flattening zip codes to MD files</div>
-            </div>
-            <div class="btn" onclick="warp('MOVIE UPDATES', 'REAL-TIME CINEMATIC SYNC', 'https://movievoidup.streamlit.app/')">
-                <div class="title-txt">MOVIE UPDATES</div>
-                <div class="desc-txt">Updates every 5 mins with search facility</div>
-            </div>
-            <div class="btn" onclick="warp('MOVIE VIBE SEARCH', 'GENRE & EMOTION FILTERING', 'https://getmoviewithvoid.streamlit.app/')">
-                <div class="title-txt">MOVIE VIBE SEARCH</div>
-                <div class="desc-txt">Search movies by genre, vibe, type etc</div>
+            <div class="grid">
+                <div class="btn" onclick="warp('AI CODE FLATTENER', 'DECONSTRUCTING ZIP TO MARKDOWN', 'https://aicodeflat.streamlit.app/')">
+                    <div class="title-txt">AI CODE FLATTENER</div>
+                    <div class="desc-txt">Flattening zip codes to MD files</div>
+                </div>
+                <div class="btn" onclick="warp('MOVIE UPDATES', 'REAL-TIME CINEMATIC SYNC', 'https://movievoidup.streamlit.app/')">
+                    <div class="title-txt">MOVIE UPDATES</div>
+                    <div class="desc-txt">Updates every 5 mins with search facility</div>
+                </div>
+                <div class="btn" onclick="warp('MOVIE VIBE SEARCH', 'GENRE & EMOTION FILTERING', 'https://getmoviewithvoid.streamlit.app/')">
+                    <div class="title-txt">MOVIE VIBE SEARCH</div>
+                    <div class="desc-txt">Search movies by genre, vibe, type etc</div>
+                </div>
             </div>
         </div>
 
-        <div class="footer-credit">voidmarauds</div>
+        <div class="footer-credit">VOIDMARAUDS</div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
         <script>
-            // BACKGROUND STARS
+            // STARFIELD
             const sS=new THREE.Scene(), sC=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
             const sR=new THREE.WebGLRenderer({canvas:document.getElementById('bg-stars'), alpha:true});
             sR.setSize(window.innerWidth,window.innerHeight);
