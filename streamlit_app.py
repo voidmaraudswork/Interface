@@ -2,16 +2,25 @@ import streamlit as st
 import streamlit.components.v1 as components
 import time
 
-# 1. PAGE CONFIG & UI STRIPPING
+# 1. PAGE CONFIG & TOTAL UI STRIPPING
 st.set_page_config(page_title="VOID CORE", layout="wide", initial_sidebar_state="collapsed")
 
+# This CSS kills the Streamlit padding and forces the iframe to be full screen without scrolling
 st.markdown("""
     <style>
-    /* Kill all Streamlit UI and scrolling */
     #MainMenu, header, footer, [data-testid="stHeader"], [data-testid="stDecoration"] { visibility: hidden !important; }
     .stApp { background: #020205 !important; overflow: hidden !important; }
     .main .block-container { padding: 0 !important; max-width: 100vw !important; height: 100vh !important; overflow: hidden !important; }
-    iframe { border: none !important; }
+    
+    /* Force the iframe to be full height and remove border */
+    iframe { 
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw !important;
+        height: 100vh !important;
+        border: none !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -27,19 +36,19 @@ if not st.session_state.booted:
             body { 
                 background: #000; margin: 0; overflow: hidden; 
                 display: flex; flex-direction: column; justify-content: center; align-items: center; 
-                height: 100vh; font-family: 'Orbitron', sans-serif; 
+                height: 100vh; width: 100vw; font-family: 'Orbitron', sans-serif; 
             }
-            .msg { color: #00f2ff; font-size: clamp(1rem, 5vw, 1.5rem); letter-spacing: 5px; text-align: center; margin-bottom: 25px; text-transform: uppercase; }
-            .bar-bg { width: 250px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
+            .msg { color: #00f2ff; font-size: clamp(0.9rem, 4vw, 1.3rem); letter-spacing: 4px; text-align: center; margin-bottom: 20px; text-transform: uppercase; }
+            .bar-bg { width: 220px; height: 2px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
             .bar-fill { width: 0%; height: 100%; background: #bc13fe; box-shadow: 0 0 15px #bc13fe; animation: load 3s forwards ease-in-out; }
             @keyframes load { to { width: 100%; } }
-            .credit { position: fixed; bottom: 30px; color: #bc13fe; font-size: 0.8rem; letter-spacing: 5px; font-weight: bold; }
+            .credit { position: fixed; bottom: 40px; color: #bc13fe; font-size: 0.7rem; letter-spacing: 4px; font-weight: bold; }
         </style>
         <div class="msg">Portal to void core is opening...</div>
         <div class="bar-bg"><div class="bar-fill"></div></div>
-        <div class="credit">CREDIT: VOIDMARAUDS</div>
-    """, height=1000)
-    time.sleep(3.5)
+        <div class="credit">BY VOIDMARAUDS</div>
+    """)
+    time.sleep(3.2)
     st.session_state.booted = True
     st.rerun()
 
@@ -58,35 +67,33 @@ else:
             }
             #bg-stars { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
             
-            /* LOADING OVERLAY */
             #warp-overlay { 
                 position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
                 background: rgba(0,0,0,0.98); display: none; flex-direction: column; 
                 justify-content: center; align-items: center; z-index: 100; text-align: center; 
             }
-            .portal-msg { color: #bc13fe; font-size: 0.7rem; letter-spacing: 4px; margin-bottom: 15px; font-weight: 900; }
-            .loader-container { width: 260px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 30px; overflow: hidden; }
+            .portal-msg { color: #bc13fe; font-size: 0.65rem; letter-spacing: 3px; margin-bottom: 10px; font-weight: 900; }
+            .loader-container { width: 240px; height: 2px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 25px; overflow: hidden; }
             .loader-fill { width: 0%; height: 100%; background: #00f2ff; box-shadow: 0 0 15px #00f2ff; }
 
-            /* CENTERED HUB UI */
-            .main-container { display: flex; flex-direction: column; align-items: center; width: 90%; max-width: 600px; }
-            .hub-title { color: #00f2ff; letter-spacing: 18px; font-size: clamp(1.8rem, 8vw, 2.5rem); margin: 0; text-align: center; }
-            .hub-subtitle { color: #bc13fe; font-size: 0.6rem; letter-spacing: 6px; margin-top: 5px; margin-bottom: 30px; opacity: 0.9; text-align: center; }
+            /* PERFECTLY CENTERED HUB */
+            .main-container { display: flex; flex-direction: column; align-items: center; width: 90%; max-width: 450px; margin-top: -40px; }
+            .hub-title { color: #00f2ff; letter-spacing: 12px; font-size: clamp(1.8rem, 7vw, 2.3rem); margin: 0; text-align: center; }
+            .hub-subtitle { color: #bc13fe; font-size: 0.55rem; letter-spacing: 5px; margin-top: 5px; margin-bottom: 25px; opacity: 0.9; }
 
-            .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; }
+            .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
             .btn { 
-                aspect-ratio: 1/1; border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 20px; 
+                aspect-ratio: 1/1; border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 15px; 
                 display: flex; flex-direction: column; align-items: center; justify-content: center; 
                 color: #00f2ff; transition: 0.3s; padding: 10px; text-align: center;
-                background: rgba(255,255,255,0.02); backdrop-filter: blur(10px); cursor: pointer; text-decoration: none;
+                background: rgba(255,255,255,0.02); backdrop-filter: blur(8px); cursor: pointer; text-decoration: none;
             }
-            .btn:hover { border-color: #00f2ff; box-shadow: 0 0 25px rgba(0, 242, 255, 0.2); transform: translateY(-5px); }
+            .btn:hover { border-color: #00f2ff; box-shadow: 0 0 20px rgba(0, 242, 255, 0.2); transform: translateY(-3px); }
             
-            .title-txt { font-size: 0.7rem; font-weight: 900; pointer-events: none; text-transform: uppercase; }
-            .desc-txt { font-family: 'Rajdhani'; font-size: 0.6rem; color: #888; margin-top: 8px; pointer-events: none; line-height: 1.1; padding: 0 5px; }
+            .title-txt { font-size: 0.65rem; font-weight: 900; pointer-events: none; }
+            .desc-txt { font-family: 'Rajdhani'; font-size: 0.55rem; color: #888; margin-top: 6px; pointer-events: none; line-height: 1.1; }
 
-            /* VISIBLE CREDIT FOOTER */
-            .footer-credit { position: fixed; bottom: 25px; color: #bc13fe; font-size: 0.7rem; letter-spacing: 5px; font-weight: bold; text-transform: uppercase; z-index: 10; }
+            .footer-credit { position: fixed; bottom: 30px; color: #bc13fe; font-size: 0.75rem; letter-spacing: 4px; font-weight: bold; text-transform: uppercase; z-index: 10; }
         </style>
     </head>
     <body>
@@ -94,10 +101,10 @@ else:
         
         <div id="warp-overlay">
             <p class="portal-msg">THE PORTAL TO VOID IS OPENING...</p>
-            <h1 style="color: #00f2ff; font-size: 1.2rem; letter-spacing: 4px; text-align: center;" id="warp-title"></h1>
-            <p style="font-family:'Rajdhani'; color:#777; font-size:0.8rem; margin-top:8px;" id="warp-desc"></p>
+            <h1 style="color: #00f2ff; font-size: 1.1rem; letter-spacing: 3px;" id="warp-title"></h1>
+            <p style="font-family:'Rajdhani'; color:#777; font-size:0.75rem; margin-top:8px; padding: 0 20px;" id="warp-desc"></p>
             <div class="loader-container"><div id="fill" class="loader-fill"></div></div>
-            <p style="font-size: 0.6rem; margin-top: 25px; color: #bc13fe; letter-spacing: 3px; font-weight: bold;">CREDIT: VOIDMARAUDS</p>
+            <p style="font-size: 0.55rem; margin-top: 20px; color: #bc13fe; letter-spacing: 3px; font-weight: bold;">CREDIT: VOIDMARAUDS</p>
         </div>
 
         <div class="main-container">
@@ -111,11 +118,11 @@ else:
                 </div>
                 <div class="btn" onclick="warp('MOVIE UPDATES', 'REAL-TIME CINEMATIC SYNC', 'https://movievoidup.streamlit.app/')">
                     <div class="title-txt">MOVIE UPDATES</div>
-                    <div class="desc-txt">Updates every 5 mins with search facility</div>
+                    <div class="desc-txt">Updates every 5 mins with search</div>
                 </div>
                 <div class="btn" onclick="warp('MOVIE VIBE SEARCH', 'GENRE & EMOTION FILTERING', 'https://getmoviewithvoid.streamlit.app/')">
                     <div class="title-txt">MOVIE VIBE SEARCH</div>
-                    <div class="desc-txt">Search movies by genre, vibe, type etc</div>
+                    <div class="desc-txt">Search movies by genre, vibe, type</div>
                 </div>
             </div>
         </div>
@@ -124,18 +131,16 @@ else:
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
         <script>
-            // STARFIELD
             const sS=new THREE.Scene(), sC=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
             const sR=new THREE.WebGLRenderer({canvas:document.getElementById('bg-stars'), alpha:true});
             sR.setSize(window.innerWidth,window.innerHeight);
             const sG=new THREE.BufferGeometry(), sP=[];
-            for(let i=0;i<3000;i++) sP.push(Math.random()*2000-1000,Math.random()*2000-1000,Math.random()*2000-1000);
+            for(let i=0;i<2500;i++) sP.push(Math.random()*2000-1000,Math.random()*2000-1000,Math.random()*2000-1000);
             sG.setAttribute('position', new THREE.Float32BufferAttribute(sP,3));
-            sS.add(new THREE.Points(sG, new THREE.PointsMaterial({color:0xffffff, size:0.7})));
+            sS.add(new THREE.Points(sG, new THREE.PointsMaterial({color:0xffffff, size:0.8})));
             sC.position.z=1;
             function animS(){ requestAnimationFrame(animS); sS.rotation.y+=0.0004; sR.render(sS,sC); } animS();
 
-            // WARP LOADING
             function warp(title, desc, url) {
                 const overlay = document.getElementById('warp-overlay');
                 const fill = document.getElementById('fill');
@@ -158,4 +163,4 @@ else:
         </script>
     </body>
     </html>
-    """, height=1000)
+    """)
