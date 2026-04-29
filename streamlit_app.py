@@ -34,13 +34,13 @@ components.html("""
     <h1 style="color:#00f2ff; letter-spacing:10px; margin-bottom:30px;">NEXUS</h1>
     
     <div class="grid">
-        <!-- Button 1 -->
-        <a href="https://aicodeflat.streamlit.app/" class="btn">
+        <!-- Button 1 with target="_blank" -->
+        <a href="https://aicodeflat.streamlit.app/" target="_blank" class="btn">
             <div class="title">AI CODE FLATTENER</div>
             <div class="desc">Flattening zip codes to MD files</div>
         </a>
-        <!-- Button 2 -->
-        <a href="https://movievoidup.streamlit.app/" class="btn">
+        <!-- Button 2 with target="_blank" -->
+        <a href="https://movievoidup.streamlit.app/" target="_blank" class="btn">
             <div class="title">MOVIE UPDATES</div>
             <div class="desc">Movie updates every 5 mins with search</div>
         </a>
