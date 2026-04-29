@@ -5,31 +5,16 @@ import time
 # 1. PAGE SETUP
 st.set_page_config(page_title="NEXUS COMMAND", layout="wide", initial_sidebar_state="collapsed")
 
-# 2. GLOBAL CSS (Hiding Streamlit UI and setting the theme)
+# 2. GLOBAL CSS
 st.markdown("""
     <style>
-    /* Hide all Streamlit defaults */
-    #MainMenu, header, footer, [data-testid="stHeader"], [data-testid="stDecoration"], .stDeployButton { display: none !important; }
-    
+    #MainMenu, header, footer, [data-testid="stHeader"] { display: none !important; }
     .stApp { background-color: #020205 !important; }
+    .main .block-container { padding: 0 !important; max-width: 100vw !important; }
+
+    .nexus-wrapper { display: flex; flex-direction: column; align-items: center; padding-top: 50px; font-family: 'Orbitron', sans-serif; }
+    .nexus-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 90%; max-width: 500px; margin-top: 30px; }
     
-    .main .block-container {
-        padding: 0 !important;
-        max-width: 100vw !important;
-        height: 100vh !important;
-    }
-
-    /* NEXUS UI GRID */
-    .nexus-wrapper {
-        display: flex; flex-direction: column; align-items: center;
-        padding-top: 50px; font-family: 'Orbitron', sans-serif;
-    }
-
-    .nexus-grid {
-        display: grid; grid-template-columns: 1fr 1fr;
-        gap: 20px; width: 90%; max-width: 500px; margin-top: 30px;
-    }
-
     .nexus-btn {
         aspect-ratio: 1 / 1;
         background: rgba(255, 255, 255, 0.03);
@@ -40,13 +25,8 @@ st.markdown("""
         text-decoration: none; color: #00f2ff !important;
         transition: 0.3s; backdrop-filter: blur(10px);
     }
-
-    .nexus-btn:hover {
-        background: rgba(0, 242, 255, 0.1);
-        border-color: #00f2ff;
-        box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
-    }
-
+    .nexus-btn:hover { background: rgba(0, 242, 255, 0.1); border-color: #00f2ff; }
+    
     .title { color: #00f2ff; font-size: 3rem; letter-spacing: 15px; margin: 0; }
     .subtitle { color: #bc13fe; font-size: 0.7rem; letter-spacing: 5px; margin-bottom: 20px; }
     </style>
