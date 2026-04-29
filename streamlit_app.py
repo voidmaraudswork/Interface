@@ -16,34 +16,41 @@ components.html("""
 <head>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500&display=swap" rel="stylesheet">
     <style>
-        body { margin: 0; background: #020205; color: white; font-family: 'Orbitron'; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 90%; max-width: 600px; }
+        body { margin: 0; background: #020205; color: white; font-family: 'Orbitron'; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-y: auto; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 90%; max-width: 600px; margin-top: 20px; }
         .btn { 
             aspect-ratio: 1/1; border: 1px solid #00f2ff; border-radius: 20px; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
             text-decoration: none; color: #00f2ff; transition: 0.3s; padding: 10px; text-align: center;
         }
         .btn:hover { background: rgba(0,242,255,0.1); box-shadow: 0 0 20px #00f2ff; transform: scale(1.02); }
-        .title { font-size: 0.9rem; font-weight: 900; margin-bottom: 5px; }
-        .desc { font-family: 'Rajdhani'; font-size: 0.7rem; color: #ccc; margin-top: 5px; line-height: 1.2; }
+        .title { font-size: 0.8rem; font-weight: 900; margin-bottom: 5px; }
+        .desc { font-family: 'Rajdhani'; font-size: 0.65rem; color: #ccc; margin-top: 5px; line-height: 1.2; }
         #s { position: fixed; top: 0; left: 0; z-index: -1; }
     </style>
 </head>
 <body>
     <canvas id="s"></canvas>
-    <h1 style="color:#00f2ff; letter-spacing:10px; margin-bottom:30px;">NEXUS</h1>
+    <h1 style="color:#00f2ff; letter-spacing:10px; margin: 30px 0;">NEXUS</h1>
     
     <div class="grid">
-        <!-- Button 1 with target="_blank" -->
+        <!-- Row 1 -->
         <a href="https://aicodeflat.streamlit.app/" target="_blank" class="btn">
             <div class="title">AI CODE FLATTENER</div>
             <div class="desc">Flattening zip codes to MD files</div>
         </a>
-        <!-- Button 2 with target="_blank" -->
         <a href="https://movievoidup.streamlit.app/" target="_blank" class="btn">
             <div class="title">MOVIE UPDATES</div>
             <div class="desc">Movie updates every 5 mins with search</div>
         </a>
+        
+        <!-- Row 2 -->
+        <a href="https://getmoviewithvoid.streamlit.app/" target="_blank" class="btn">
+            <div class="title">MOVIE VIBE SEARCH</div>
+            <div class="desc">Search movies by genre, vibe, type etc</div>
+        </a>
+        <!-- Placeholder for Button 4 to keep the grid aligned -->
+        <div style="aspect-ratio: 1/1;"></div> 
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
