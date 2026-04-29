@@ -65,7 +65,7 @@ components.html("""
 
     <!-- 1. BOOT SCREEN -->
     <div id="boot-screen">
-        <div style="color:#00f2ff; letter-spacing:5px; font-size:0.8rem;">PORTAL TO VOID CORE IS OPENING...</div>
+        <div style="color:#00f2ff; letter-spacing:5px; font-size:0.8rem;">PORTAL TO VOID IS OPENING...</div>
         <div class="boot-bar"><div class="boot-fill"></div></div>
         <div style="position:fixed; bottom:30px; color:rgba(255,255,255,0.3); font-size:0.6rem; letter-spacing:3px;">VOIDMARAUDS</div>
     </div>
@@ -108,7 +108,7 @@ components.html("""
 
     <!-- 4. LOADING WARP -->
     <div id="warp-overlay">
-        <p style="color:#bc13fe; font-size:0.6rem; letter-spacing:4px; font-weight:bold;">PORTAL TO VOID CORE IS OPENING...</p>
+        <p style="color:#bc13fe; font-size:0.6rem; letter-spacing:4px; font-weight:bold;">PORTAL TO VOID IS OPENING...</p>
         <h1 id="warp-title" style="color:#00f2ff; font-size:1.2rem; margin:10px 0;"></h1>
         <div style="width:200px; height:2px; background:rgba(255,255,255,0.1); margin:15px 0;"><div id="fill" class="warp-fill"></div></div>
         <p style="font-size:0.55rem; color:#bc13fe; letter-spacing:4px;">VOIDMARAUDS</p>
@@ -144,8 +144,8 @@ components.html("""
         sC.position.z=1;
         function anim(){ requestAnimationFrame(anim); sS.rotation.y+=0.0004; sR.render(sS,sC); } anim();
 
-        let storage = JSON.parse(localStorage.getItem('void_system_v10')) || { active: [], locked: [], expiry: null };
-        if(storage.expiry && Date.now() > storage.expiry) { storage = { active: [], locked: [], expiry: null }; localStorage.removeItem('void_system_v10'); }
+        let storage = JSON.parse(localStorage.getItem('void_system_v11')) || { active: [], locked: [], expiry: null };
+        if(storage.expiry && Date.now() > storage.expiry) { storage = { active: [], locked: [], expiry: null }; localStorage.removeItem('void_system_v11'); }
 
         window.onload = () => {
             setTimeout(() => { 
@@ -165,7 +165,7 @@ components.html("""
             if(document.getElementById('override-input').value === 'ifollowedvoidmarauds') {
                 storage.active.push(currentId);
                 storage.locked = storage.locked.filter(i => i !== currentId);
-                localStorage.setItem('void_system_v10', JSON.stringify(storage));
+                localStorage.setItem('void_system_v11', JSON.stringify(storage));
                 location.reload();
             } else { alert('ACCESS DENIED.'); }
         }
@@ -181,7 +181,7 @@ components.html("""
         function finalizeChoices() {
             const ids = ['btn-1', 'btn-2', 'btn-3'];
             storage = { active: selected, locked: ids.filter(i => !selected.includes(i)), expiry: Date.now() + 86400000 };
-            localStorage.setItem('void_system_v10', JSON.stringify(storage));
+            localStorage.setItem('void_system_v11', JSON.stringify(storage));
             document.getElementById('selection-popup').style.display='none';
             applyLocks();
         }
