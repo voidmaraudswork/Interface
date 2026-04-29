@@ -1,7 +1,7 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
-# 1. PAGE CONFIG & UI HIDING
+# 1. PAGE CONFIG & UI STRIPPING
 st.set_page_config(page_title="VOID CORE", layout="wide", initial_sidebar_state="collapsed")
 
 st.markdown("""
@@ -13,7 +13,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 2. THE CORE ENGINE (HTML, CSS, JS)
+# 2. THE CORE ENGINE
 components.html("""
 <!DOCTYPE html>
 <html>
@@ -23,13 +23,13 @@ components.html("""
         body { margin: 0; background: #020205; color: white; font-family: 'Orbitron'; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; width: 100vw; overflow: hidden; }
         #bg-stars { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
 
-        /* BOOTUP SEQUENCE (3 SEC) */
+        /* 1. BOOTUP SEQUENCE (3 SEC) */
         #boot-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
         .boot-bar { width: 200px; height: 2px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-top:20px; }
         .boot-fill { width: 0%; height: 100%; background: #bc13fe; animation: boot-load 3s forwards ease-in-out; }
         @keyframes boot-load { to { width: 100%; } }
 
-        /* MODALS */
+        /* 2. MODALS */
         .modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.97); z-index: 8000; display: none; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(25px); text-align: center; }
         .modal-box { width: 85%; max-width: 450px; padding: 25px; border: 2px solid #00f2ff; background: #050505; border-radius: 25px; box-shadow: 0 0 40px rgba(0, 242, 255, 0.4); }
 
@@ -43,19 +43,22 @@ components.html("""
         /* OVERRIDE TERMINAL */
         #override-input { width: 90%; background: transparent; border: none; border-bottom: 2px solid #ff0055; color: #ff0055; font-family: 'Orbitron'; text-align: center; margin: 20px 0; outline: none; letter-spacing: 2px; }
 
-        /* HUB UI */
+        /* 3. MAIN HUB UI */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 92%; max-width: 440px; margin-top: 15px; }
         .btn-container { position: relative; aspect-ratio: 1/1; border-radius: 18px; padding: 3px; background: linear-gradient(0deg, #00f2ff, #bc13fe, #00f2ff); background-size: 100% 200%; animation: flow 3s linear infinite; overflow: hidden; cursor: pointer; }
         @keyframes flow { 0% { background-position: 0% 0%; } 100% { background-position: 0% 200%; } }
         .btn-inner { width: 100%; height: 100%; background: #08080a; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
         
+        .title-sm { font-size: 0.6rem; color: #00f2ff; font-weight: 900; padding: 0 5px; text-transform: uppercase; }
+        .desc-sm { font-family: 'Rajdhani'; font-size: 0.45rem; color: #777; margin-top: 5px; padding: 0 10px; line-height: 1.1; }
+
         /* NEON RED CROSS */
         .locked-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 0, 0, 0.15); backdrop-filter: grayscale(1) blur(3px); z-index: 100; display: flex; justify-content: center; align-items: center; }
         .locked-overlay::before, .locked-overlay::after { content: ''; position: absolute; width: 85%; height: 6px; background: #ff0055; box-shadow: 0 0 20px #ff0055; border-radius: 10px; }
         .locked-overlay::before { transform: rotate(45deg); }
         .locked-overlay::after { transform: rotate(-45deg); }
 
-        /* LOADING WARP */
+        /* 4. LOADING WARP */
         #warp-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 7000; }
         .warp-fill { width: 0%; height: 3px; background: #00f2ff; box-shadow: 0 0 15px #00f2ff; }
 
@@ -66,7 +69,7 @@ components.html("""
 <body>
     <canvas id="bg-stars"></canvas>
 
-    <!-- 1. BOOT SCREEN -->
+    <!-- BOOT SCREEN -->
     <div id="boot-screen">
         <div style="color:#00f2ff; letter-spacing:15px; font-size:2rem; font-weight:900;">VOID CORE</div>
         <div style="color:#bc13fe; letter-spacing:5px; font-size:0.6rem; margin-top:10px;">PORTAL TO VOID CORE IS OPENING...</div>
@@ -74,23 +77,23 @@ components.html("""
         <div style="position:fixed; bottom:30px; color:rgba(255,255,255,0.3); font-size:0.6rem; letter-spacing:3px;">VOIDMARAUDS</div>
     </div>
 
-    <!-- 2. SELECTION POPUP -->
+    <!-- SELECTION POPUP -->
     <div id="selection-popup" class="modal">
         <div class="modal-box">
             <h2 style="color:#00f2ff; font-size:0.9rem; letter-spacing:2px; margin:0;">SELECT 2 MODULES</h2>
-            <p style="font-family:'Rajdhani'; color:#777; font-size:0.7rem; margin-top:8px;">PORTAL TO VOID IS OPENING...<br>Choose 2 paths to stabilize for 24 hours.</p>
+            <p style="font-family:'Rajdhani'; color:#777; font-size:0.7rem; margin-top:8px;">PORTAL TO VOID IS OPENING...<br>Stabilize 2 modules for 24-hour access.</p>
             <div class="select-grid">
                 <div class="select-item" onclick="toggleSelect(this, 'btn-1')">
                     <b style="color:#00f2ff; font-size:0.7rem;">AI CODE FLATTENER</b><br>
-                    <small style="color:#666;">ZIP TO MARKDOWN</small>
+                    <small style="color:#666;">Flattening zip codes to MD files</small>
                 </div>
                 <div class="select-item" onclick="toggleSelect(this, 'btn-2')">
                     <b style="color:#00f2ff; font-size:0.7rem;">MOVIE UPDATES</b><br>
-                    <small style="color:#666;">5-MIN SYNC</small>
+                    <small style="color:#666;">Updates every 5 mins with search facility</small>
                 </div>
                 <div class="select-item" onclick="toggleSelect(this, 'btn-3')">
-                    <b style="color:#00f2ff; font-size:0.7rem;">VIBE SEARCH</b><br>
-                    <small style="color:#666;">GENRE FILTER</small>
+                    <b style="color:#00f2ff; font-size:0.7rem;">MOVIE VIBE SEARCH</b><br>
+                    <small style="color:#666;">Search by genre, vibe, type etc</small>
                 </div>
             </div>
             <button class="confirm-btn" id="confirm-protocol" onclick="finalizeChoices()">INITIALIZE GATEWAY</button>
@@ -98,7 +101,7 @@ components.html("""
         </div>
     </div>
 
-    <!-- 3. OVERRIDE TERMINAL -->
+    <!-- OVERRIDE TERMINAL -->
     <div id="override-modal" class="modal">
         <div class="modal-box" style="border-color:#ff0055;">
             <h2 style="color:#ff0055; font-size:0.9rem;">OVERRIDE REQUIRED</h2>
@@ -110,27 +113,28 @@ components.html("""
         </div>
     </div>
 
-    <!-- 4. LOADING WARP -->
+    <!-- LOADING WARP -->
     <div id="warp-overlay">
         <p style="color:#bc13fe; font-size:0.6rem; letter-spacing:4px; font-weight:bold;">PORTAL TO VOID IS OPENING...</p>
-        <h1 id="warp-title" style="color:#00f2ff; font-size:1.2rem; margin:10px 0;"></h1>
-        <div style="width:200px; height:2px; background:rgba(255,255,255,0.1); margin:15px 0;"><div id="fill" class="warp-fill"></div></div>
+        <h1 id="warp-title" style="color:#00f2ff; font-size:1.1rem; margin:5px 0;"></h1>
+        <p id="warp-desc" style="font-family:'Rajdhani'; color:#555; font-size:0.75rem; padding:0 20px;"></p>
+        <div style="width:200px; height:2px; background:rgba(255,255,255,0.1); margin:20px 0;"><div id="fill" class="warp-fill"></div></div>
         <p style="font-size:0.55rem; color:#bc13fe; letter-spacing:4px;">VOIDMARAUDS</p>
     </div>
 
-    <!-- MAIN INTERFACE -->
+    <!-- MAIN HUB -->
     <h1 style="color:#00f2ff; letter-spacing:15px; font-size: 2.2rem; margin:0; margin-top:-20px;">VOID CORE</h1>
     <p style="color:#bc13fe; font-size:0.55rem; letter-spacing:6px; margin-bottom:20px;">TERMINAL ACCESS</p>
 
     <div class="grid">
-        <div class="btn-container" id="btn-1" onclick="handleInteraction('btn-1', 'AI CODE FLATTENER', 'https://aicodeflat.streamlit.app/')">
-            <div class="btn-inner"><b style="font-size:0.7rem; color:#00f2ff;">AI CODE FLATTENER</b></div>
+        <div class="btn-container" id="btn-1" onclick="handleInteraction('btn-1', 'AI CODE FLATTENER', 'Flattening zip codes to MD files', 'https://aicodeflat.streamlit.app/')">
+            <div class="btn-inner"><div class="title-sm">AI CODE FLATTENER</div><div class="desc-sm">Flattening zip codes to MD files</div></div>
         </div>
-        <div class="btn-container" id="btn-2" onclick="handleInteraction('btn-2', 'MOVIE UPDATES', 'https://movievoidup.streamlit.app/')">
-            <div class="btn-inner"><b style="font-size:0.7rem; color:#00f2ff;">MOVIE UPDATES</b></div>
+        <div class="btn-container" id="btn-2" onclick="handleInteraction('btn-2', 'MOVIE UPDATES', 'Updates every 5 mins with search facility', 'https://movievoidup.streamlit.app/')">
+            <div class="btn-inner"><div class="title-sm">MOVIE UPDATES</div><div class="desc-sm">Updates every 5 mins with search facility</div></div>
         </div>
-        <div class="btn-container" id="btn-3" onclick="handleInteraction('btn-3', 'VIBE SEARCH', 'https://getmoviewithvoid.streamlit.app/')">
-            <div class="btn-inner"><b style="font-size:0.7rem; color:#00f2ff;">MOVIE VIBE SEARCH</b></div>
+        <div class="btn-container" id="btn-3" onclick="handleInteraction('btn-3', 'VIBE SEARCH', 'Search by genre, vibe, type etc', 'https://getmoviewithvoid.streamlit.app/')">
+            <div class="btn-inner"><div class="title-sm">MOVIE VIBE SEARCH</div><div class="desc-sm">Search by genre, vibe, type etc</div></div>
         </div>
     </div>
 
@@ -148,8 +152,8 @@ components.html("""
         sC.position.z=1;
         function anim(){ requestAnimationFrame(anim); sS.rotation.y+=0.0004; sR.render(sS,sC); } anim();
 
-        let storage = JSON.parse(localStorage.getItem('void_system_v12')) || { active: [], locked: [], expiry: null };
-        if(storage.expiry && Date.now() > storage.expiry) { storage = { active: [], locked: [], expiry: null }; localStorage.removeItem('void_system_v12'); }
+        let storage = JSON.parse(localStorage.getItem('void_master_v1')) || { active: [], locked: [], expiry: null };
+        if(storage.expiry && Date.now() > storage.expiry) { storage = { active: [], locked: [], expiry: null }; localStorage.removeItem('void_master_v1'); }
 
         window.onload = () => {
             setTimeout(() => { 
@@ -159,17 +163,17 @@ components.html("""
         };
 
         let currentId = '';
-        function handleInteraction(id, title, url) {
+        function handleInteraction(id, title, desc, url) {
             if(storage.locked.includes(id)) { currentId = id; document.getElementById('override-modal').style.display='flex'; return; }
             if(!storage.expiry) { document.getElementById('selection-popup').style.display='flex'; return; }
-            runWarp(title, url);
+            runWarp(title, desc, url);
         }
 
         function checkOverride() {
             if(document.getElementById('override-input').value === 'ifollowedvoidmarauds') {
                 storage.active.push(currentId);
                 storage.locked = storage.locked.filter(i => i !== currentId);
-                localStorage.setItem('void_system_v12', JSON.stringify(storage));
+                localStorage.setItem('void_master_v1', JSON.stringify(storage));
                 location.reload();
             } else { alert('ACCESS DENIED.'); }
         }
@@ -185,7 +189,7 @@ components.html("""
         function finalizeChoices() {
             const ids = ['btn-1', 'btn-2', 'btn-3'];
             storage = { active: selected, locked: ids.filter(i => !selected.includes(i)), expiry: Date.now() + 86400000 };
-            localStorage.setItem('void_system_v12', JSON.stringify(storage));
+            localStorage.setItem('void_master_v1', JSON.stringify(storage));
             document.getElementById('selection-popup').style.display='none';
             applyLocks();
         }
@@ -199,10 +203,11 @@ components.html("""
             });
         }
 
-        function runWarp(title, url) {
+        function runWarp(title, desc, url) {
             const overlay = document.getElementById('warp-overlay');
             const fill = document.getElementById('fill');
             document.getElementById('warp-title').innerText = title;
+            document.getElementById('warp-desc').innerText = desc;
             overlay.style.display = 'flex';
             let start = null;
             function step(timestamp) {
