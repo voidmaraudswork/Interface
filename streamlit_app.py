@@ -29,7 +29,7 @@ components.html("""
         .boot-fill { width: 0%; height: 100%; background: #bc13fe; animation: boot-load 3s forwards ease-in-out; }
         @keyframes boot-load { to { width: 100%; } }
 
-        /* POPUP MODALS */
+        /* MODALS */
         .modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.97); z-index: 8000; display: none; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(25px); text-align: center; }
         .modal-box { width: 85%; max-width: 450px; padding: 25px; border: 2px solid #00f2ff; background: #050505; border-radius: 25px; box-shadow: 0 0 40px rgba(0, 242, 255, 0.4); }
 
@@ -58,6 +58,9 @@ components.html("""
         /* LOADING WARP */
         #warp-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 7000; }
         .warp-fill { width: 0%; height: 3px; background: #00f2ff; box-shadow: 0 0 15px #00f2ff; }
+
+        /* FOOTER CREDIT */
+        .footer-credit { position: fixed; bottom: 30px; color: #bc13fe; font-size: 0.8rem; font-weight: bold; letter-spacing: 6px; z-index: 50; }
     </style>
 </head>
 <body>
@@ -65,7 +68,8 @@ components.html("""
 
     <!-- 1. BOOT SCREEN -->
     <div id="boot-screen">
-        <div style="color:#00f2ff; letter-spacing:5px; font-size:0.8rem;">PORTAL TO VOID IS OPENING...</div>
+        <div style="color:#00f2ff; letter-spacing:15px; font-size:2rem; font-weight:900;">VOID CORE</div>
+        <div style="color:#bc13fe; letter-spacing:5px; font-size:0.6rem; margin-top:10px;">PORTAL TO VOID CORE IS OPENING...</div>
         <div class="boot-bar"><div class="boot-fill"></div></div>
         <div style="position:fixed; bottom:30px; color:rgba(255,255,255,0.3); font-size:0.6rem; letter-spacing:3px;">VOIDMARAUDS</div>
     </div>
@@ -74,7 +78,7 @@ components.html("""
     <div id="selection-popup" class="modal">
         <div class="modal-box">
             <h2 style="color:#00f2ff; font-size:0.9rem; letter-spacing:2px; margin:0;">SELECT 2 MODULES</h2>
-            <p style="font-family:'Rajdhani'; color:#777; font-size:0.7rem; margin-top:8px;">PORTAL TO VOID CORE IS OPENING...<br>Choose 2 paths to stabilize for 24 hours.</p>
+            <p style="font-family:'Rajdhani'; color:#777; font-size:0.7rem; margin-top:8px;">PORTAL TO VOID IS OPENING...<br>Choose 2 paths to stabilize for 24 hours.</p>
             <div class="select-grid">
                 <div class="select-item" onclick="toggleSelect(this, 'btn-1')">
                     <b style="color:#00f2ff; font-size:0.7rem;">AI CODE FLATTENER</b><br>
@@ -115,8 +119,8 @@ components.html("""
     </div>
 
     <!-- MAIN INTERFACE -->
-    <h1 style="color:#00f2ff; letter-spacing:15px; font-size: 2rem; margin:0; margin-top:-20px;">VOID CORE</h1>
-    <p style="color:#bc13fe; font-size:0.5rem; letter-spacing:6px; margin-bottom:20px;">TERMINAL ACCESS</p>
+    <h1 style="color:#00f2ff; letter-spacing:15px; font-size: 2.2rem; margin:0; margin-top:-20px;">VOID CORE</h1>
+    <p style="color:#bc13fe; font-size:0.55rem; letter-spacing:6px; margin-bottom:20px;">TERMINAL ACCESS</p>
 
     <div class="grid">
         <div class="btn-container" id="btn-1" onclick="handleInteraction('btn-1', 'AI CODE FLATTENER', 'https://aicodeflat.streamlit.app/')">
@@ -130,7 +134,7 @@ components.html("""
         </div>
     </div>
 
-    <div style="position:fixed; bottom:30px; color:#bc13fe; font-size:0.8rem; font-weight:bold; letter-spacing:6px;">VOIDMARAUDS</div>
+    <div class="footer-credit">VOIDMARAUDS</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
@@ -144,8 +148,8 @@ components.html("""
         sC.position.z=1;
         function anim(){ requestAnimationFrame(anim); sS.rotation.y+=0.0004; sR.render(sS,sC); } anim();
 
-        let storage = JSON.parse(localStorage.getItem('void_system_v11')) || { active: [], locked: [], expiry: null };
-        if(storage.expiry && Date.now() > storage.expiry) { storage = { active: [], locked: [], expiry: null }; localStorage.removeItem('void_system_v11'); }
+        let storage = JSON.parse(localStorage.getItem('void_system_v12')) || { active: [], locked: [], expiry: null };
+        if(storage.expiry && Date.now() > storage.expiry) { storage = { active: [], locked: [], expiry: null }; localStorage.removeItem('void_system_v12'); }
 
         window.onload = () => {
             setTimeout(() => { 
@@ -165,7 +169,7 @@ components.html("""
             if(document.getElementById('override-input').value === 'ifollowedvoidmarauds') {
                 storage.active.push(currentId);
                 storage.locked = storage.locked.filter(i => i !== currentId);
-                localStorage.setItem('void_system_v11', JSON.stringify(storage));
+                localStorage.setItem('void_system_v12', JSON.stringify(storage));
                 location.reload();
             } else { alert('ACCESS DENIED.'); }
         }
@@ -181,7 +185,7 @@ components.html("""
         function finalizeChoices() {
             const ids = ['btn-1', 'btn-2', 'btn-3'];
             storage = { active: selected, locked: ids.filter(i => !selected.includes(i)), expiry: Date.now() + 86400000 };
-            localStorage.setItem('void_system_v11', JSON.stringify(storage));
+            localStorage.setItem('void_system_v12', JSON.stringify(storage));
             document.getElementById('selection-popup').style.display='none';
             applyLocks();
         }
