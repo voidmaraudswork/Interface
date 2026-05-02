@@ -23,7 +23,7 @@ components.html("""
         body { margin: 0; background: #020205; color: white; font-family: 'Orbitron'; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; width: 100vw; overflow: hidden; }
         #bg-stars { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
 
-        /* BOOTUP SEQUENCE (3 SEC) */
+        /* BOOTUP SEQUENCE */
         #boot-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
         .boot-bar { width: 200px; height: 2px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-top:20px; }
         .boot-fill { width: 0%; height: 100%; background: #bc13fe; animation: boot-load 3s forwards ease-in-out; }
@@ -112,7 +112,7 @@ components.html("""
         <div class="btn-container" id="btn-1" onclick="handleInteraction('btn-1', 'AI CODE FLATTENER', 'Convert zip to md or change formats', 'https://aicodeflat.streamlit.app/')">
             <div class="btn-inner"><div class="title-sm">AI CODE FLATTENER</div><div class="desc-sm">Convert zip to md or change formats</div></div>
         </div>
-        <div class="btn-container" id="btn-2" onclick="handleInteraction('btn-2', 'MOVIE UPDATES', 'Get 3 movie suggestions every 5 mins', 'https://movievoidup.streamlit.app/')">
+        <div class="btn-container" id="btn-2" onclick="handleInteraction('btn-2', 'MOVIE UPDATES', 'Get 3 movie suggestions updated every 5 mins', 'https://movievoidup.streamlit.app/')">
             <div class="btn-inner"><div class="title-sm">MOVIE UPDATES</div><div class="desc-sm">Suggestions every 5 mins with search</div></div>
         </div>
         <div class="btn-container" id="btn-3" onclick="handleInteraction('btn-3', 'VIBE SEARCH', 'Find movies by typing your vibe', 'https://getmoviewithvoid.streamlit.app/')">
@@ -140,7 +140,7 @@ components.html("""
         sC.position.z=1;
         function anim(){ requestAnimationFrame(anim); sS.rotation.y+=0.0004; sR.render(sS,sC); } anim();
 
-        let storage = JSON.parse(localStorage.getItem('void_master_v30')) || { active: [], locked: ['btn-4'], expiry: null, autovoid_known: false };
+        let storage = JSON.parse(localStorage.getItem('void_master_v31')) || { active: [], locked: ['btn-4'], expiry: null, autovoid_known: false };
         if(storage.expiry && Date.now() > storage.expiry) { storage.active = []; storage.locked = ['btn-4']; storage.expiry = null; }
 
         window.onload = () => {
@@ -152,13 +152,15 @@ components.html("""
         function handleInteraction(id, title, desc, url) {
             currentId = id;
             if(id === 'btn-4') {
-                document.getElementById('override-text').innerText = storage.autovoid_known ? "ENTER ACCESS PIN (345)" : "ENTER SYSTEM KEY";
+                document.getElementById('override-text').innerText = storage.autovoid_known ? "ENTER ACCESS PIN" : "ENTER SYSTEM KEY";
                 document.getElementById('override-modal').style.display='flex';
+                document.getElementById('override-input').value = '';
                 return;
             }
             if(storage.locked.includes(id)) {
                 document.getElementById('override-text').innerText = "MODULE LOCKED. ENTER OVERRIDE CODE.";
                 document.getElementById('override-modal').style.display='flex';
+                document.getElementById('override-input').value = '';
                 return;
             }
             if(!storage.expiry) { document.getElementById('selection-popup').style.display='flex'; return; }
@@ -167,22 +169,25 @@ components.html("""
 
         function checkOverride() {
             const input = document.getElementById('override-input').value;
+            // First time unlock of module visual
             if(!storage.autovoid_known && currentId === 'btn-4' && input === 'ifollowedvoidmarauds') {
                 storage.autovoid_known = true;
-                localStorage.setItem('void_master_v30', JSON.stringify(storage));
+                localStorage.setItem('void_master_v31', JSON.stringify(storage));
                 unlockAutoVoidVisual();
                 document.getElementById('override-modal').style.display='none';
                 return;
             }
+            // Entering the module with the PIN
             if(storage.autovoid_known && currentId === 'btn-4' && input === '345') {
                 document.getElementById('override-modal').style.display='none';
                 runWarp('AUTOVOID', 'Watch movies and enjoy', 'https://voidauto.onrender.com');
                 return;
             }
+            // Standard locked module bypass
             if(input === 'ifollowedvoidmarauds') {
                 storage.active.push(currentId);
                 storage.locked = storage.locked.filter(i => i !== currentId);
-                localStorage.setItem('void_master_v30', JSON.stringify(storage));
+                localStorage.setItem('void_master_v31', JSON.stringify(storage));
                 location.reload();
             } else { alert('INVALID CODE.'); }
         }
@@ -204,9 +209,9 @@ components.html("""
         function finalizeChoices() {
             storage.active = selected;
             storage.locked = ['btn-1', 'btn-2', 'btn-3'].filter(i => !selected.includes(i));
-            storage.locked.push('btn-4'); // Keep autovoid locked behind the specific code logic
+            storage.locked.push('btn-4'); // Keep autovoid logic separate
             storage.expiry = Date.now() + 86400000;
-            localStorage.setItem('void_master_v30', JSON.stringify(storage));
+            localStorage.setItem('void_master_v31', JSON.stringify(storage));
             document.getElementById('selection-popup').style.display='none';
             applyLocks();
         }
