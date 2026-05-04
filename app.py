@@ -68,7 +68,7 @@ VOID_UI = """
         <div class="btn-container" id="btn-1" onclick="handleInteraction('btn-1', 'AI CODE FLATTENER', 'https://lloingexcodeflat.onrender.com')">
             <div class="btn-inner"><b style="font-size:0.6rem;">AI CODE FLATTENER</b></div>
         </div>
-        <div class="btn-container" id="btn-2" onclick="handleInteraction('btn-2', 'MOVIE UPDATES', 'https://movievoidup.streamlit.app/')">
+        <div class="btn-container" id="btn-2" onclick="handleInteraction('btn-2', 'MOVIE UPDATES', 'https://lloingexmovieup.onrender.com')">
             <div class="btn-inner"><b style="font-size:0.6rem;">MOVIE UPDATES</b></div>
         </div>
         <div class="btn-container" id="btn-3" onclick="handleInteraction('btn-3', 'VIBE SEARCH', 'https://getmoviewithvoid.streamlit.app/')">
