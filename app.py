@@ -9,7 +9,7 @@ VOID_UI = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>voidmarauds | VOID CORE Terminal</title>
+    <title>lloingex core</title>
     <meta name="description" content="Official VOID CORE Portal by voidmarauds. Access AI Code Flattener, Movie Updates, and Vibe Search.">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
@@ -36,7 +36,7 @@ VOID_UI = """
 <body>
     <canvas id="bg-stars"></canvas>
     <div id="boot-screen">
-        <div style="color:#00f2ff; letter-spacing:15px; font-size:2rem;">VOID CORE</div>
+        <div style="color:#00f2ff; letter-spacing:15px; font-size:2rem;">LLOINGEX</div>
         <div class="boot-bar"><div class="boot-fill"></div></div>
     </div>
     <div id="selection-popup" class="modal">
@@ -58,11 +58,11 @@ VOID_UI = """
         </div>
     </div>
     <div id="warp-overlay">
-        <p style="color:#bc13fe; font-size:0.6rem; letter-spacing:4px;">PORTAL TO VOID IS OPENING...</p>
+        <p style="color:#bc13fe; font-size:0.6rem; letter-spacing:4px;">PORTAL TO LLOINGEX SUB IS OPENING...</p>
         <h1 id="warp-title" style="color:#00f2ff; font-size:1.2rem;"></h1>
         <div style="width:200px; height:2px; background:rgba(255,255,255,0.1); margin-top:20px;"><div id="fill" class="warp-fill"></div></div>
     </div>
-    <h1 style="color:#00f2ff; letter-spacing:15px; font-size: 2.2rem; margin:0;">VOID CORE</h1>
+    <h1 style="color:#00f2ff; letter-spacing:15px; font-size: 2.2rem; margin:0;">LLOINGEX</h1>
     <p style="color:#bc13fe; font-size:0.5rem; letter-spacing:6px; margin-bottom:20px;">TERMINAL ACCESS</p>
     <div class="grid">
         <div class="btn-container" id="btn-1" onclick="handleInteraction('btn-1', 'AI CODE FLATTENER', 'https://loingexcodeflat.onrender.com')">
@@ -78,7 +78,7 @@ VOID_UI = """
             <div class="btn-inner" id="btn-4-content"><b style="font-size:0.6rem; color:#ff0055;">CLASSIFIED</b></div>
         </div>
     </div>
-    <div style="position:fixed; bottom:30px; color:#bc13fe; font-size:0.8rem; font-weight:bold; letter-spacing:6px;">VOIDMARAUDS</div>
+    <div style="position:fixed; bottom:30px; color:#bc13fe; font-size:0.8rem; font-weight:bold; letter-spacing:6px;">LLOINGEX</div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         const sS=new THREE.Scene(), sC=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
