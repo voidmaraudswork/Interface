@@ -65,7 +65,7 @@ VOID_UI = """
     <h1 style="color:#00f2ff; letter-spacing:15px; font-size: 2.2rem; margin:0;">LLOINGEX</h1>
     <p style="color:#bc13fe; font-size:0.5rem; letter-spacing:6px; margin-bottom:20px;">TERMINAL ACCESS</p>
     <div class="grid">
-        <div class="btn-container" id="btn-1" onclick="handleInteraction('btn-1', 'AI CODE FLATTENER', 'https://loingexcodeflat.onrender.com')">
+        <div class="btn-container" id="btn-1" onclick="handleInteraction('btn-1', 'AI CODE FLATTENER', 'https://lloingexcodeflat.onrender.com')">
             <div class="btn-inner"><b style="font-size:0.6rem;">AI CODE FLATTENER</b></div>
         </div>
         <div class="btn-container" id="btn-2" onclick="handleInteraction('btn-2', 'MOVIE UPDATES', 'https://movievoidup.streamlit.app/')">
