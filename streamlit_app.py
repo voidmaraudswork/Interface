@@ -1,133 +1,84 @@
-import streamlit as st
-import streamlit.components.v1 as components
+from flask import Flask
 
-# 1. PAGE CONFIG & UI STRIPPING
-st.set_page_config(page_title="VOID CORE", layout="wide", initial_sidebar_state="collapsed")
+app = Flask(__name__)
 
-st.markdown("""
-    <style>
-    #MainMenu, header, footer, [data-testid="stHeader"], [data-testid="stDecoration"] { visibility: hidden !important; }
-    .stApp { background: #020205 !important; overflow: hidden !important; }
-    .main .block-container { padding: 0 !important; max-width: 100vw !important; height: 100vh !important; overflow: hidden !important; }
-    iframe { position: fixed; top: 0; left: 0; width: 100vw !important; height: 100vh !important; border: none !important; }
-    </style>
-""", unsafe_allow_html=True)
-
-# 2. THE CORE ENGINE
-components.html("""
+# The entire VOID CORE UI stored as a variable
+VOID_UI = """
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>voidmarauds | VOID CORE Terminal</title>
+    <meta name="description" content="Official VOID CORE Portal by voidmarauds. Access AI Code Flattener, Movie Updates, and Vibe Search.">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         body { margin: 0; background: #020205; color: white; font-family: 'Orbitron'; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; width: 100vw; overflow: hidden; }
-        #bg-stars { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
-
-        /* BOOTUP SEQUENCE */
-        #boot-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        .boot-bar { width: 200px; height: 2px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-top:20px; }
+        canvas { position: fixed; top: 0; left: 0; z-index: -1; }
+        #boot-screen { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .boot-bar { width: 200px; height: 2px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-top: 20px; }
         .boot-fill { width: 0%; height: 100%; background: #bc13fe; animation: boot-load 3s forwards ease-in-out; }
         @keyframes boot-load { to { width: 100%; } }
-
-        /* MODALS */
-        .modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.97); z-index: 8000; display: none; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(25px); text-align: center; }
-        .modal-box { width: 85%; max-width: 450px; padding: 25px; border: 2px solid #00f2ff; background: #050505; border-radius: 25px; box-shadow: 0 0 40px rgba(0, 242, 255, 0.4); }
-
-        /* SELECTION GRID */
-        .select-grid { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
-        .select-item { padding: 12px; border: 1px solid rgba(0, 242, 255, 0.2); border-radius: 12px; text-align: left; cursor: pointer; transition: 0.3s; }
-        .select-item.active { border-color: #bc13fe; background: rgba(188, 19, 254, 0.15); box-shadow: 0 0 15px #bc13fe; }
-        .confirm-btn { width: 100%; padding: 15px; border: 1px solid #00f2ff; background: transparent; color: #00f2ff; font-family: 'Orbitron'; cursor: pointer; opacity: 0.3; pointer-events: none; transition: 0.3s; }
-        .confirm-btn.ready { opacity: 1; pointer-events: auto; background: rgba(0, 242, 255, 0.1); }
-
-        /* OVERRIDE TERMINAL */
-        #override-input { width: 90%; background: transparent; border: none; border-bottom: 2px solid #ff0055; color: #ff0055; font-family: 'Orbitron'; text-align: center; margin: 20px 0; outline: none; letter-spacing: 2px; font-size: 0.7rem; }
-
-        /* HUB UI GRID (2x2) */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.97); z-index: 8000; display: none; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(25px); text-align: center; }
+        .modal-box { width: 85%; max-width: 400px; padding: 25px; border: 2px solid #00f2ff; background: #050505; border-radius: 25px; box-shadow: 0 0 40px rgba(0, 242, 255, 0.4); }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 92%; max-width: 440px; margin-top: 15px; }
         .btn-container { position: relative; aspect-ratio: 1/1; border-radius: 18px; padding: 3px; background: linear-gradient(0deg, #00f2ff, #bc13fe, #00f2ff); background-size: 100% 200%; animation: flow 3s linear infinite; overflow: hidden; cursor: pointer; }
         @keyframes flow { 0% { background-position: 0% 0%; } 100% { background-position: 0% 200%; } }
         .btn-inner { width: 100%; height: 100%; background: #08080a; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-        
-        .title-sm { font-size: 0.58rem; color: #00f2ff; font-weight: 900; padding: 0 5px; text-transform: uppercase; }
-        .desc-sm { font-family: 'Rajdhani'; font-size: 0.45rem; color: #777; margin-top: 5px; padding: 0 10px; line-height: 1.1; }
-
-        /* NEON RED CROSS */
-        .locked-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 0, 0, 0.15); backdrop-filter: grayscale(1) blur(3px); z-index: 100; display: flex; justify-content: center; align-items: center; }
+        .locked-overlay { position: absolute; inset: 0; background: rgba(255, 0, 0, 0.15); backdrop-filter: grayscale(1) blur(3px); z-index: 100; display: flex; justify-content: center; align-items: center; }
         .locked-overlay::before, .locked-overlay::after { content: ''; position: absolute; width: 85%; height: 6px; background: #ff0055; box-shadow: 0 0 20px #ff0055; border-radius: 10px; }
-        .locked-overlay::before { transform: rotate(45deg); }
-        .locked-overlay::after { transform: rotate(-45deg); }
-
-        /* LOADING WARP */
-        #warp-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 7000; }
+        .locked-overlay::before { transform: rotate(45deg); } .locked-overlay::after { transform: rotate(-45deg); }
+        #warp-overlay { position: fixed; inset: 0; background: #000; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 7000; }
         .warp-fill { width: 0%; height: 3px; background: #00f2ff; box-shadow: 0 0 15px #00f2ff; }
+        #override-input { width: 80%; background: transparent; border: none; border-bottom: 2px solid #ff0055; color: #ff0055; font-family: 'Orbitron'; text-align: center; margin: 20px 0; outline: none; }
     </style>
 </head>
 <body>
     <canvas id="bg-stars"></canvas>
-
     <div id="boot-screen">
-        <div style="color:#00f2ff; letter-spacing:15px; font-size:2rem; font-weight:900;">VOID CORE</div>
-        <div style="color:#bc13fe; letter-spacing:5px; font-size:0.6rem; margin-top:10px;">PORTAL TO VOID IS OPENING...</div>
+        <div style="color:#00f2ff; letter-spacing:15px; font-size:2rem;">VOID CORE</div>
         <div class="boot-bar"><div class="boot-fill"></div></div>
     </div>
-
-    <!-- SELECTION POPUP -->
     <div id="selection-popup" class="modal">
         <div class="modal-box">
-            <h2 style="color:#00f2ff; font-size:0.9rem; letter-spacing:2px; margin:0;">SELECT 2 MODULES</h2>
-            <div id="select-grid-area" class="select-grid" style="display: flex; flex-direction: column; gap: 10px; margin: 20px 0; text-align: left;">
+            <h2 style="color:#00f2ff; font-size:1rem;">SELECT 2 MODULES</h2>
+            <div style="display:flex; flex-direction:column; gap:10px; margin:20px 0; text-align:left;">
                 <div id="sel-btn-1" style="padding:10px; border:1px solid #333; border-radius:10px;" onclick="toggleSelect('sel-btn-1', 'btn-1')">AI CODE FLATTENER</div>
                 <div id="sel-btn-2" style="padding:10px; border:1px solid #333; border-radius:10px;" onclick="toggleSelect('sel-btn-2', 'btn-2')">MOVIE UPDATES</div>
                 <div id="sel-btn-3" style="padding:10px; border:1px solid #333; border-radius:10px;" onclick="toggleSelect('sel-btn-3', 'btn-3')">VIBE SEARCH</div>
             </div>
-            <button class="confirm-btn" id="confirm-protocol" onclick="finalizeChoices()">INITIALIZE GATEWAY</button>
+            <button id="confirm-protocol" style="width:100%; padding:15px; background:none; border:1px solid #00f2ff; color:#00f2ff; font-family:Orbitron; opacity:0.3;" onclick="finalizeChoices()">LOCK SELECTION</button>
         </div>
     </div>
-
-    <!-- OVERRIDE MODAL -->
     <div id="override-modal" class="modal">
         <div class="modal-box" style="border-color:#ff0055;">
-            <h2 style="color:#ff0055; font-size:0.9rem;">ACCESS DENIED</h2>
-            <p id="override-text" style="font-family:'Rajdhani'; color:#777; font-size:0.7rem; margin-top:10px;">MODULE LOCKED. ENTER CODE.</p>
-            <input type="text" id="override-input" placeholder="ENTER CODE..." autocomplete="off">
-            <div style="display:flex; gap:10px;">
-                <button class="confirm-btn ready" onclick="checkOverride()" style="border-color:#ff0055; color:#ff0055;">BYPASS</button>
-                <button class="confirm-btn ready" onclick="document.getElementById('override-modal').style.display='none'">CANCEL</button>
-            </div>
+            <h2 style="color:#ff0055; font-size:0.9rem;">OVERRIDE REQUIRED</h2>
+            <input type="text" id="override-input" placeholder="ACCESS CODE..." autocomplete="off">
+            <button style="width:100%; padding:10px; background:none; border:1px solid #ff0055; color:#ff0055; font-family:Orbitron;" onclick="checkOverride()">BYPASS</button>
         </div>
     </div>
-
     <div id="warp-overlay">
-        <p style="color:#bc13fe; font-size:0.6rem; letter-spacing:4px; font-weight:bold;">PORTAL TO VOID IS OPENING...</p>
-        <h1 id="warp-title" style="color:#00f2ff; font-size:1.1rem; margin:5px 0;"></h1>
-        <p id="warp-desc" style="font-family:'Rajdhani'; color:#555; font-size:0.75rem; padding:0 20px;"></p>
-        <div style="width:200px; height:2px; background:rgba(255,255,255,0.1); margin:15px 0;"><div id="fill" class="warp-fill"></div></div>
+        <p style="color:#bc13fe; font-size:0.6rem; letter-spacing:4px;">PORTAL TO VOID IS OPENING...</p>
+        <h1 id="warp-title" style="color:#00f2ff; font-size:1.2rem;"></h1>
+        <div style="width:200px; height:2px; background:rgba(255,255,255,0.1); margin-top:20px;"><div id="fill" class="warp-fill"></div></div>
     </div>
-
-    <h1 style="color:#00f2ff; letter-spacing:15px; font-size: 2.2rem; margin:0; margin-top:-20px;">VOID CORE</h1>
-    <p style="color:#bc13fe; font-size:0.55rem; letter-spacing:6px; margin-bottom:20px;">TERMINAL ACCESS</p>
-
+    <h1 style="color:#00f2ff; letter-spacing:15px; font-size: 2.2rem; margin:0;">VOID CORE</h1>
+    <p style="color:#bc13fe; font-size:0.5rem; letter-spacing:6px; margin-bottom:20px;">TERMINAL ACCESS</p>
     <div class="grid">
-        <div class="btn-container" id="btn-1" onclick="handleInteraction('btn-1', 'AI CODE FLATTENER', 'Convert zip to md or change formats', 'https://aicodeflat.streamlit.app/')">
-            <div class="btn-inner"><div class="title-sm">AI CODE FLATTENER</div><div class="desc-sm">Convert zip to md or change formats</div></div>
+        <div class="btn-container" id="btn-1" onclick="handleInteraction('btn-1', 'AI CODE FLATTENER', 'https://aicodeflat.streamlit.app/')">
+            <div class="btn-inner"><b style="font-size:0.6rem;">AI CODE FLATTENER</b></div>
         </div>
-        <div class="btn-container" id="btn-2" onclick="handleInteraction('btn-2', 'MOVIE UPDATES', 'Get 3 movie suggestions updated every 5 mins', 'https://movievoidup.streamlit.app/')">
-            <div class="btn-inner"><div class="title-sm">MOVIE UPDATES</div><div class="desc-sm">Suggestions every 5 mins with search</div></div>
+        <div class="btn-container" id="btn-2" onclick="handleInteraction('btn-2', 'MOVIE UPDATES', 'https://movievoidup.streamlit.app/')">
+            <div class="btn-inner"><b style="font-size:0.6rem;">MOVIE UPDATES</b></div>
         </div>
-        <div class="btn-container" id="btn-3" onclick="handleInteraction('btn-3', 'VIBE SEARCH', 'Find movies by typing your vibe', 'https://getmoviewithvoid.streamlit.app/')">
-            <div class="btn-inner"><div class="title-sm">MOVIE VIBE SEARCH</div><div class="desc-sm">Find movies by typing your vibe</div></div>
+        <div class="btn-container" id="btn-3" onclick="handleInteraction('btn-3', 'VIBE SEARCH', 'https://getmoviewithvoid.streamlit.app/')">
+            <div class="btn-inner"><b style="font-size:0.6rem;">VIBE SEARCH</b></div>
         </div>
-        <div class="btn-container" id="btn-4" onclick="handleInteraction('btn-4', 'AUTOVOID', 'Watch movies and enjoy', 'https://voidauto.onrender.com')">
-            <div class="btn-inner" id="btn-4-content">
-                <div class="title-sm" style="color:#ff0055;">CLASSIFIED</div>
-                <div class="desc-sm">LOCKED MODULE</div>
-            </div>
+        <div class="btn-container" id="btn-4" onclick="handleInteraction('btn-4', 'AUTOVOID', 'https://voidauto.onrender.com')">
+            <div class="btn-inner" id="btn-4-content"><b style="font-size:0.6rem; color:#ff0055;">CLASSIFIED</b></div>
         </div>
     </div>
-
     <div style="position:fixed; bottom:30px; color:#bc13fe; font-size:0.8rem; font-weight:bold; letter-spacing:6px;">VOIDMARAUDS</div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         const sS=new THREE.Scene(), sC=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
@@ -139,109 +90,63 @@ components.html("""
         sS.add(new THREE.Points(sG, new THREE.PointsMaterial({color:0xffffff, size:0.8})));
         sC.position.z=1;
         function anim(){ requestAnimationFrame(anim); sS.rotation.y+=0.0004; sR.render(sS,sC); } anim();
-
-        let storage = JSON.parse(localStorage.getItem('void_master_v31')) || { active: [], locked: ['btn-4'], expiry: null, autovoid_known: false };
-        if(storage.expiry && Date.now() > storage.expiry) { storage.active = []; storage.locked = ['btn-4']; storage.expiry = null; }
-
-        window.onload = () => {
-            if(storage.autovoid_known) unlockAutoVoidVisual();
-            setTimeout(() => { document.getElementById('boot-screen').style.display = 'none'; if(storage.expiry) applyLocks(); }, 3200);
-        };
-
+        let storage = JSON.parse(localStorage.getItem('void_render_v1')) || { active: [], locked: ['btn-4'], expiry: null, auto_unlocked: false };
+        if(storage.expiry && Date.now() > storage.expiry) { storage = { active: [], locked: ['btn-4'], expiry: null, auto_unlocked: storage.auto_unlocked }; }
+        window.onload = () => { if(storage.auto_unlocked) unlockAutoUI(); setTimeout(() => { document.getElementById('boot-screen').style.display = 'none'; if(storage.expiry) applyLocks(); }, 3200); };
         let currentId = '';
-        function handleInteraction(id, title, desc, url) {
+        function handleInteraction(id, title, url) {
             currentId = id;
-            if(id === 'btn-4') {
-                document.getElementById('override-text').innerText = storage.autovoid_known ? "ENTER ACCESS PIN" : "ENTER SYSTEM KEY";
-                document.getElementById('override-modal').style.display='flex';
-                document.getElementById('override-input').value = '';
-                return;
-            }
-            if(storage.locked.includes(id)) {
-                document.getElementById('override-text').innerText = "MODULE LOCKED. ENTER OVERRIDE CODE.";
-                document.getElementById('override-modal').style.display='flex';
-                document.getElementById('override-input').value = '';
-                return;
-            }
+            if(storage.locked.includes(id) || (id === 'btn-4' && !storage.auto_unlocked)) { document.getElementById('override-modal').style.display='flex'; return; }
             if(!storage.expiry) { document.getElementById('selection-popup').style.display='flex'; return; }
-            runWarp(title, desc, url);
+            runWarp(title, url);
         }
-
         function checkOverride() {
-            const input = document.getElementById('override-input').value;
-            // First time unlock of module visual
-            if(!storage.autovoid_known && currentId === 'btn-4' && input === 'ifollowedvoidmarauds') {
-                storage.autovoid_known = true;
-                localStorage.setItem('void_master_v31', JSON.stringify(storage));
-                unlockAutoVoidVisual();
-                document.getElementById('override-modal').style.display='none';
-                return;
-            }
-            // Entering the module with the PIN
-            if(storage.autovoid_known && currentId === 'btn-4' && input === '345') {
-                document.getElementById('override-modal').style.display='none';
-                runWarp('AUTOVOID', 'Watch movies and enjoy', 'https://voidauto.onrender.com');
-                return;
-            }
-            // Standard locked module bypass
-            if(input === 'ifollowedvoidmarauds') {
+            let val = document.getElementById('override-input').value;
+            if(val === 'ifollowedvoidmarauds' || (storage.auto_unlocked && val === '345')) {
+                if(currentId === 'btn-4') storage.auto_unlocked = true;
                 storage.active.push(currentId);
                 storage.locked = storage.locked.filter(i => i !== currentId);
-                localStorage.setItem('void_master_v31', JSON.stringify(storage));
+                localStorage.setItem('void_render_v1', JSON.stringify(storage));
                 location.reload();
-            } else { alert('INVALID CODE.'); }
+            } else { alert('ACCESS DENIED'); }
         }
-
-        function unlockAutoVoidVisual() {
-            document.getElementById('btn-4-content').innerHTML = '<div class="title-sm">AUTOVOID</div><div class="desc-sm">WATCH & ENJOY</div>';
-        }
-
         let selected = [];
         function toggleSelect(elId, id) {
             const el = document.getElementById(elId);
             if(selected.includes(id)) { selected = selected.filter(i => i !== id); el.style.borderColor = '#333'; }
             else if(selected.length < 2) { selected.push(id); el.style.borderColor = '#bc13fe'; }
-            const btn = document.getElementById('confirm-protocol');
-            if(selected.length === 2) btn.style.opacity = '1', btn.style.pointerEvents = 'auto';
-            else btn.style.opacity = '0.3', btn.style.pointerEvents = 'none';
+            document.getElementById('confirm-protocol').style.opacity = (selected.length === 2) ? '1' : '0.3';
         }
-
         function finalizeChoices() {
-            storage.active = selected;
-            storage.locked = ['btn-1', 'btn-2', 'btn-3'].filter(i => !selected.includes(i));
-            storage.locked.push('btn-4'); // Keep autovoid logic separate
+            storage.active = selected; storage.locked = ['btn-1','btn-2','btn-3'].filter(i => !selected.includes(i));
+            if(!storage.auto_unlocked) storage.locked.push('btn-4');
             storage.expiry = Date.now() + 86400000;
-            localStorage.setItem('void_master_v31', JSON.stringify(storage));
-            document.getElementById('selection-popup').style.display='none';
-            applyLocks();
+            localStorage.setItem('void_render_v1', JSON.stringify(storage));
+            location.reload();
         }
-
-        function applyLocks() {
-            storage.locked.forEach(id => {
-                const b = document.getElementById(id);
-                if(b && !b.querySelector('.locked-overlay')) {
-                    const o = document.createElement('div'); o.className='locked-overlay'; b.appendChild(o);
-                }
-            });
-        }
-
-        function runWarp(title, desc, url) {
-            const overlay = document.getElementById('warp-overlay');
-            const fill = document.getElementById('fill');
+        function unlockAutoUI() { document.getElementById('btn-4-content').innerHTML = '<b style="font-size:0.6rem;">AUTOVOID</b>'; }
+        function applyLocks() { storage.locked.forEach(id => { const b = document.getElementById(id); if(!b.querySelector('.locked-overlay')){ const o=document.createElement('div'); o.className='locked-overlay'; b.appendChild(o); } }); }
+        function runWarp(title, url) {
             document.getElementById('warp-title').innerText = title;
-            document.getElementById('warp-desc').innerText = desc;
-            overlay.style.display = 'flex';
+            document.getElementById('warp-overlay').style.display = 'flex';
             let start = null;
-            function step(timestamp) {
-                if (!start) start = timestamp;
-                let progress = (timestamp - start) / 2000;
-                fill.style.width = Math.min(progress * 100, 100) + '%';
-                if (progress < 1) requestAnimationFrame(step);
-                else { window.open(url, '_blank'); setTimeout(() => { overlay.style.display='none'; fill.style.width='0%'; }, 1000); }
+            function step(t) {
+                if (!start) start = t;
+                let p = (t - start) / 2000;
+                document.getElementById('fill').style.width = Math.min(p * 100, 100) + '%';
+                if (p < 1) requestAnimationFrame(step);
+                else { window.open(url, '_blank'); setTimeout(() => { document.getElementById('warp-overlay').style.display='none'; }, 1000); }
             }
             requestAnimationFrame(step);
         }
     </script>
 </body>
 </html>
-""", height=1000)
+"""
+
+@app.route('/')
+def home():
+    return VOID_UI
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000)
