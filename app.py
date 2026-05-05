@@ -71,7 +71,7 @@ VOID_UI = """
         <div class="btn-container" id="btn-2" onclick="handleInteraction('btn-2', 'MOVIE UPDATES', 'https://lloingexmovieup.onrender.com')">
             <div class="btn-inner"><b style="font-size:0.6rem;">MOVIE UPDATES</b></div>
         </div>
-        <div class="btn-container" id="btn-3" onclick="handleInteraction('btn-3', 'VIBE SEARCH', 'https://getmoviewithvoid.streamlit.app/')">
+        <div class="btn-container" id="btn-3" onclick="handleInteraction('btn-3', 'VIBE SEARCH', 'https://lloingexmovievibe.onrender.com')">
             <div class="btn-inner"><b style="font-size:0.6rem;">VIBE SEARCH</b></div>
         </div>
         <div class="btn-container" id="btn-4" onclick="handleInteraction('btn-4', 'AUTOVOID', 'https://voidauto.onrender.com')">
