@@ -2,7 +2,7 @@ from flask import Flask
 
 app = Flask(__name__)
 
-# The entire VOID CORE UI stored as a variable
+# The entire VOID CORE UI stored as a variable - Added Journal Formatter Link
 VOID_UI = """
 <!DOCTYPE html>
 <html lang="en">
@@ -74,6 +74,11 @@ VOID_UI = """
         <div class="btn-container" id="btn-3" onclick="handleInteraction('btn-3', 'VIBE SEARCH', 'https://lloingexmovievibe.onrender.com')">
             <div class="btn-inner"><b style="font-size:0.6rem;">VIBE SEARCH</b></div>
         </div>
+        
+        <div class="btn-container" id="btn-5" onclick="handleInteraction('btn-5', 'JOURNAL FORMATTER', 'https://auto-journal-formatter-and-pdf-converter.onrender.com/')">
+            <div class="btn-inner"><b style="font-size:0.55rem;">JOURNAL FORMATTER WITH PDF DOWNLOAD</b></div>
+        </div>
+
         <div class="btn-container" id="btn-4" onclick="handleInteraction('btn-4', 'AUTOVOID', 'https://voidauto.onrender.com')">
             <div class="btn-inner" id="btn-4-content"><b style="font-size:0.6rem; color:#ff0055;">CLASSIFIED</b></div>
         </div>
@@ -97,7 +102,7 @@ VOID_UI = """
         function handleInteraction(id, title, url) {
             currentId = id;
             if(storage.locked.includes(id) || (id === 'btn-4' && !storage.auto_unlocked)) { document.getElementById('override-modal').style.display='flex'; return; }
-            if(!storage.expiry) { document.getElementById('selection-popup').style.display='flex'; return; }
+            if(!storage.expiry && id !== 'btn-5') { document.getElementById('selection-popup').style.display='flex'; return; }
             runWarp(title, url);
         }
         function checkOverride() {
