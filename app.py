@@ -112,7 +112,7 @@ VOID_UI = """
     <p style="color:#bc13fe; font-size:0.4rem; letter-spacing:5px; margin-bottom:15px;">TERMINAL ACCESS</p>
 
     <div class="grid">
-        <div class="btn-container" id="btn-1" onclick="handleInteraction('btn-1', 'AI CODE FLATTENER', 'https://lloingexcodeflat.onrender.com')">
+        <div class="btn-container" id="btn-1" onclick="handleInteraction('btn-1', 'AI CODE FLATTENER', 'https://ai-code-flattener-m8e4.onrender.com')">
             <div class="btn-inner"><b>AI CODE<br>FLATTENER</b></div>
         </div>
         <div class="btn-container" id="btn-2" onclick="handleInteraction('btn-2', 'MOVIE UPDATES', 'https://lloingexmovieup.onrender.com')">
@@ -121,7 +121,7 @@ VOID_UI = """
         <div class="btn-container" id="btn-3" onclick="handleInteraction('btn-3', 'VIBE SEARCH', 'https://lloingexmovievibe.onrender.com')">
             <div class="btn-inner"><b>VIBE<br>SEARCH</b></div>
         </div>
-        <div class="btn-container" id="btn-5" onclick="handleInteraction('btn-5', 'JOURNAL FORMATTER', 'https://auto-journal-formatter-and-pdf-converter.onrender.com/')">
+        <div class="btn-container" id="btn-5" onclick="handleInteraction('btn-5', 'TYPING MASTER', 'https://sunny-unicorn-193ae9.netlify.app/')">
             <div class="btn-inner"><b>JOURNAL<br>FORMATTER</b></div>
         </div>
         <div class="btn-container" id="btn-4" onclick="handleInteraction('btn-4', 'AUTOVOID', 'https://voidauto.onrender.com')">
