@@ -122,7 +122,7 @@ VOID_UI = """
             <div class="btn-inner"><b>VIBE<br>SEARCH</b></div>
         </div>
         <div class="btn-container" id="btn-5" onclick="handleInteraction('btn-5', 'TYPING MASTER', 'https://sunny-unicorn-193ae9.netlify.app/')">
-            <div class="btn-inner"><b>JOURNAL<br>FORMATTER</b></div>
+            <div class="btn-inner"><b>TYPING<br>MASTER</b></div>
         </div>
         <div class="btn-container" id="btn-4" onclick="handleInteraction('btn-4', 'AUTOVOID', 'https://voidauto.onrender.com')">
             <div class="btn-inner" id="btn-4-content"><b style="color:#ff0055;">CLASSIFIED</b></div>
